@@ -1,0 +1,38 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="80"
+	height="80"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="url(#:r1:)"
+	stroke-width="2"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	class="rounded-full bg-gray-95 bg-transparent loader"
+>
+	<defs>
+		<linearGradient
+			id=":r1:"
+			x1="0%"
+			y1="0%"
+			x2="100%"
+			y2="100%"
+		>
+			<stop
+				offset="0%"
+				stop-color="oklch(0.585 0.233 277.117)"
+			></stop>
+			<stop
+				offset="50%"
+				stop-color="oklch(0.627 0.265 303.9)"
+			></stop>
+			<stop
+				offset="100%"
+				stop-color="oklch(0.667 0.295 322.15)"
+			></stop>
+		</linearGradient>
+	</defs>
+	<path
+		d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z"
+	></path>
+</svg>
