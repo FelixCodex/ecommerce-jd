@@ -27,6 +27,9 @@ export const CLIENT_URL = 'https://javier-david.com/';
 
 export const SERVER_URL = 'https://modelfantasy.up.railway.app/';
 
+export const EMAIL_USER = process.env.EMAIL_USER;
+export const EMAIL_PASS = process.env.EMAIL_PASS;
+
 export const TURSO_URL = process.env.TURSO_URL;
 export const TURSO_AUTH = process.env.TURSO_AUTH;
 

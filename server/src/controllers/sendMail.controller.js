@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { EMAIL_PASS, EMAIL_USER } from '../config';
 
 class SendMailController {
 	sendMail = async (req, res) => {
@@ -11,24 +12,21 @@ class SendMailController {
 		}
 
 		try {
-			// Configurar el transporte SMTP
 			const transporter = nodemailer.createTransport({
 				service: 'gmail',
 				auth: {
-					user: process.env.EMAIL_USER, // Tu correo
-					pass: process.env.EMAIL_PASS, // Tu contraseña de aplicación
+					user: EMAIL_USER,
+					pass: EMAIL_PASS,
 				},
 			});
 
-			// Configurar el correo
 			const mailOptions = {
-				from: email, // El correo del usuario que envía el mensaje
-				to: 'javierdavidstore@gmail.com', // Tu correo donde recibirás los mensajes
+				from: email,
+				to: 'javierdavidstore@gmail.com',
 				subject: `Javier David Store: Nuevo mensaje de ${name}`,
 				text: `Nombre: ${name}\nCorreo: ${email}\nMensaje: ${message}`,
 			};
 
-			// Enviar el correo
 			await transporter.sendMail(mailOptions);
 
 			res.status(200).json({ success: 'Correo enviado correctamente' });

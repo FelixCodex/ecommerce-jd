@@ -38,7 +38,7 @@ export default function Welcome() {
 						{/* Primera línea: Texto claro y fuerte */}
 						<span className='block text-[--light_0]'>
 							{/* {LANGUAGE.WELCOME.HERO_WELCOME[preferences.language]} */}
-							The Digital Foundry of
+							{LANGUAGE.WELCOME.HERO_WELCOME_1[preferences.language]}
 						</span>
 
 						{/* Segunda línea (Destacada): Gradiente vibrante y audaz */}
@@ -46,16 +46,13 @@ export default function Welcome() {
 							className='block text-transparent bg-clip-text 
                            bg-gradient-to-r from-[--brand_color] to-[--brand_color_100]'
 						>
-							3D ASSETS
+							{LANGUAGE.WELCOME.HERO_WELCOME_2[preferences.language]}
 						</span>
 					</h1>
 
 					{/* Subtítulo / Descripción */}
 					<p className='mt-6 text-xl sm:text-2xl text-[--light_200] max-w-3xl mx-auto font-light'>
-						{/* {LANGUAGE.WELCOME.HERO_SUBTITLE[preferences.language]} */}
-						Get instant access to a curated collection of high-fidelity,
-						ready-to-use 3D models. Built with precision for your next game,
-						film, or architectural project
+						{LANGUAGE.WELCOME.HERO_DESCRIPTION[preferences.language]}
 					</p>
 
 					{/* Contenedor de Botones (Más profesional y espaciado) */}

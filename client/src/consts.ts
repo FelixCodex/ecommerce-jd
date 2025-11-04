@@ -48,13 +48,17 @@ export const months = {
 
 export const LANGUAGE = {
 	WELCOME: {
-		HERO_WELCOME: {
-			es: 'Bienvenido a mi',
-			en: 'Unleash Your Next',
+		HERO_WELCOME_1: {
+			es: 'La forja digital de',
+			en: 'The Digital Foundry of',
+		},
+		HERO_WELCOME_2: {
+			es: 'OBJETOS 3D',
+			en: '3D ASSETS',
 		},
 		HERO_DESCRIPTION: {
-			es: 'Descubre un mundo de contenido digital premium. Explora, descarga y da vida a tus ideas con arte 3D hecho con corazón.',
-			en: 'Discover a world of premium digital content. Explore, download, and bring your ideas to life with 3D art made with heart.',
+			es: 'Obtén acceso instantáneo a una selecta colección de modelos 3D de alta fidelidad, listos para usar. Diseñados con precisión para tu próximo videojuego, película o proyecto arquitectónico.',
+			en: 'Get instant access to a curated collection of high-fidelity, ready-to-use 3D models. Built with precision for your next game, film, or architectural project',
 		},
 		HERO_BUTTON_START: {
 			es: 'Empezar ahora',
