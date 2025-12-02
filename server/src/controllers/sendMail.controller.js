@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { EMAIL_PASS, EMAIL_USER } from '../config';
+import { EMAIL_PASS, EMAIL_USER } from '../config.js';
 
 class SendMailController {
 	sendMail = async (req, res) => {

@@ -312,12 +312,12 @@ export function Chats() {
 					) : (
 						<div className='flex justify-center items-center gap-3 min-w-80 w-80'>
 							<CircleDashed className='w-10 h-10 loader'></CircleDashed>
-							<span className='text-3xl'>Cargando chats...</span>
+							<span className='text-3xl'>Loading chats...</span>
 						</div>
 					)}
 				</div>
 				<div
-					className={`relative md:flex flex-col overflow-hidden bg-white border-2 transition-transform duration-300 ease-out right-0 ${
+					className={`relative md:flex flex-col overflow-hidden bg-white shadow border-2 transition-transform duration-300 ease-out right-0 ${
 						chatSelected != null ? '' : 'hidden'
 					} rounded-lg min-w-0 w-full md:w-auto grow h-full border-gray-300`}
 				>
@@ -347,7 +347,7 @@ export function Chats() {
 						)}
 					</div>
 					<div
-						className='flex min-h-0 flex-col p-3 max-h-[calc(100%-96px)] overflow-auto gap-2'
+						className='flex min-h-0 flex-col grow p-3 max-h-[calc(100%-96px)] overflow-auto gap-2'
 						key={'chatBox'}
 						id={'chatBox'}
 					>

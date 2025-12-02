@@ -35,6 +35,11 @@ const MonthsDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 // type FilterType = "week" | "month" | "year" | "fullyear" | "alltime";
 
+const loadingInitialState = {
+	totalProductSells: false,
+	totalProductSellsNames: false,
+};
+
 export function Metrics() {
 	const { purchases } = usePurchase();
 	const { payments } = usePayment();
@@ -42,6 +47,7 @@ export function Metrics() {
 	const { products } = useProduct();
 	const [filter, setFilter] = useState({ type: 'week', aux: '' });
 	const [datesByFilter, setDatesByFilter] = useState<string[]>([]);
+	const [loadingData, setLoadingData] = useState(loadingInitialState);
 
 	const [gains, setGains] = useState<number[]>([]);
 	const [usersCreated, setUsersCreated] = useState<number[]>([]);
@@ -337,12 +343,18 @@ export function Metrics() {
 		setUsersCreated(calculateUsersData());
 		setProductsSelled(calculateProductSelledData());
 		setDatesByFilter(getDateByFilter());
+		setLoadingData(prev => ({
+			...prev,
+			totalProductSells: true,
+			totalProductSellsNames: true,
+		}));
 		const allP = calculateAllProductSellsData() as {
 			data: number[];
 			prodNames: string[];
 		};
 		setTotalProductSells(allP.data);
 		setTotalProductSellsN(allP.prodNames);
+		setLoadingData(loadingInitialState);
 		setTotalSells(calculateTotalSells());
 		setTotalSellsToday(calculateTotalSellsToday());
 		setTotalSellsMonth(calculateTotalSellsMonth());
@@ -368,38 +380,38 @@ export function Metrics() {
 								}}
 								className='focus:outline-0 px-3 py-1'
 							>
-								<option value='week'>1 week ago</option>
-								<option value='month'>this month</option>
-								<option value='year'>this year</option>
+								<option value='week'>A week ago</option>
+								<option value='month'>This month</option>
+								<option value='year'>This year</option>
 							</select>
 						</div>
 					</div>
 					<div className='flex items-center w-full justify-between'>
 						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
 							<MetricCard
-								title='Ventas Acumuladas'
-								subtitle='Total de transacciones'
+								title='Accumulated Sales'
+								subtitle='Total transactions'
 								icon={CircleDollarSignIcon}
 								color='#2563eb'
 								value={totalSells}
 							></MetricCard>
 							<MetricCard
-								title='Ventas del Día'
-								subtitle='Transacciones hoy'
+								title='Sales of the day'
+								subtitle='Transations today'
 								icon={Coins}
 								color='#f97316'
 								value={totalSellsToday}
 							></MetricCard>
 							<MetricCard
-								title='Ventas Mensuales'
-								subtitle='Transacciones este mes'
+								title='Monthly Sales'
+								subtitle='Transactions this month'
 								icon={CalendarDaysIcon}
 								color='#9333ea'
 								value={totalSellsMonth}
 							></MetricCard>
 							<MetricCard
-								title='Productos Activos'
-								subtitle='Inventario disponible'
+								title='Active Products'
+								subtitle='Avaliable Inventory'
 								icon={Package}
 								color='#16a34a'
 								value={products ? products.length : 0}
@@ -410,16 +422,16 @@ export function Metrics() {
 						<div className='flex items-center justify-center p-2 pt-4 w-full lg:w-[50%] bg-white rounded-md shadow-md'>
 							{gains.length > 0 && datesByFilter.length > 0 ? (
 								<LineChart
-									title='Ganancias'
+									title='Gains'
 									dataLabels={filter.type != 'month'}
-									name='Ganancia'
+									name='Gain'
 									data={gains}
 									days={datesByFilter}
 								></LineChart>
 							) : (
 								<div className='w-full h-32 flex justify-center items-center text-2xl gap-4'>
 									<CircleDashed className='h-10 w-10 loader'></CircleDashed>
-									<p>Analizando ganancias...</p>
+									<p>Analazing Gains...</p>
 								</div>
 							)}
 						</div>
@@ -427,45 +439,48 @@ export function Metrics() {
 							{usersCreated.length > 0 && datesByFilter.length > 0 ? (
 								<LineChart
 									dataLabels={filter.type != 'month'}
-									title='Usuarios creados'
-									name='Usuarios creados'
+									title='Users created'
+									name='Users created'
 									data={usersCreated}
 									days={datesByFilter}
 								></LineChart>
 							) : (
 								<div className='w-full h-32 flex justify-center items-center text-2xl gap-4'>
 									<CircleDashed className='h-10 w-10 loader'></CircleDashed>
-									<p>Analizando usuarios creados...</p>
+									<p>Analazing Users created...</p>
 								</div>
 							)}
 						</div>
 					</div>
 					<div className='flex flex-col lg:flex-row gap-4 items-center w-full justify-between'>
 						<div className='flex items-center justify-center p-2 pl-0 pr-4 w-full lg:w-[50%] bg-white rounded-md shadow-md'>
-							{totalProductSells.length > 0 && totalProductSellsN.length > 0 ? (
+							{(totalProductSells.length > 0 &&
+								totalProductSellsN.length > 0) ||
+							!loadingData.totalProductSells ? (
 								<HorizontalChart
-									title='Total de ventas por producto'
+									title='Total sales per Product'
 									data={totalProductSells}
 									categorys={totalProductSellsN}
 								></HorizontalChart>
 							) : (
 								<div className='w-full h-32 flex justify-center items-center text-2xl gap-4'>
 									<CircleDashed className='h-10 w-10 loader'></CircleDashed>
-									<p>Analizando total de productos vendidos...</p>
+									<p>Analazing total sales...</p>
 								</div>
 							)}
 						</div>
 						<div className='flex items-center justify-center p-2 pr-0 w-full lg:w-[50%] bg-white rounded-md shadow-md'>
-							{productsSelled.length > 0 && datesByFilter.length > 0 ? (
+							{(productsSelled.length > 0 && datesByFilter.length > 0) ||
+							!loadingData.totalProductSellsNames ? (
 								<StackedBarChart
-									title='Productos vendidos por dia'
+									title='Products sold today'
 									days={datesByFilter}
 									data={productsSelled}
 								></StackedBarChart>
 							) : (
 								<div className='w-full h-32 flex justify-center items-center text-2xl gap-4'>
 									<CircleDashed className='h-10 w-10 loader'></CircleDashed>
-									<p>Analizando productos comprados...</p>
+									<p>Analazing products sales...</p>
 								</div>
 							)}
 						</div>

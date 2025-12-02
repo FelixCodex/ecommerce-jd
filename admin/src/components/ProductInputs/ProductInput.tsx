@@ -24,7 +24,7 @@ export function ProductInput<T>({
 			<label
 				htmlFor={identifier}
 				className={`absolute top-[-0.875rem] left-3 px-1 ${
-					disabled ? 'hidden' : 'bg-gray-50'
+					disabled ? 'hidden' : 'from-gray-50 to-white bg-gradient-to-b'
 				} text-lg rounded-md font-medium text-gray-600`}
 			>
 				{name}
@@ -37,7 +37,7 @@ export function ProductInput<T>({
 					id={identifier}
 					required={required}
 					disabled={disabled}
-					className='w-full h-28 text-2xl text-gray-900 placeholder-gray-400 bg-gray-50 border-2 border-solid border-gray-400 hover:border-indigo-600 focus:outline-indigo-600 rounded-md p-1.5'
+					className='w-full h-28 text-2xl text-gray-900 placeholder-gray-400 bg-white border-2 border-solid border-gray-400 hover:border-indigo-600 focus:outline-indigo-600 rounded-md p-1.5'
 					placeholder={placeholder}
 				></textarea>
 			) : (
@@ -57,7 +57,7 @@ export function ProductInput<T>({
 					className={`w-full h-16 text-2xl text-gray-900 ${
 						disabled
 							? 'bg-gray-200'
-							: 'bg-gray-50 hover:border-indigo-600 focus:outline-indigo-600'
+							: 'bg-white hover:border-indigo-600 focus:outline-indigo-600'
 					} border-2 border-solid border-gray-400  rounded-md p-1.5`}
 					placeholder={placeholder}
 					min={type === 'number' ? 0 : undefined}

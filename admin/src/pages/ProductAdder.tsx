@@ -138,10 +138,10 @@ export function ProductAdder() {
 							updateData('title', value);
 						}}
 						required
-						name='Titulo'
+						name='Title'
 						identifier='title'
 						type='text'
-						placeholder='Titulo del producto'
+						placeholder='Product Title'
 					/>
 					<ProductInput
 						value={data.description as string}
@@ -149,14 +149,14 @@ export function ProductAdder() {
 							updateData('description', value);
 						}}
 						required
-						name='Descripción'
+						name='Description'
 						identifier='description'
 						type='textarea'
-						placeholder='Descripcion del producto'
+						placeholder='Product Description'
 					></ProductInput>
 					<Toggle
 						checked={data.isFree}
-						label='Producto es Gratis?'
+						label='Free Product?'
 						onChange={(value: boolean) => {
 							updateData('isFree', value);
 						}}
@@ -172,7 +172,7 @@ export function ProductAdder() {
 						type='number'
 						step='0.01'
 						disabled={data.isFree}
-						placeholder='Precio personal'
+						placeholder='Personal Price'
 					></ProductInput>
 					<ProductInput
 						value={data.isFree ? 0 : (data.professional as number)}
@@ -185,7 +185,7 @@ export function ProductAdder() {
 						type='number'
 						step='0.01'
 						disabled={data.isFree}
-						placeholder='Precio Profesional'
+						placeholder='Professional Price'
 					></ProductInput>
 					<ProductInputImage
 						required
@@ -193,9 +193,9 @@ export function ProductAdder() {
 						setFile={(value: File | null) => {
 							updateData('image', value);
 						}}
-						name='Imagen Principal'
+						name='Main Image'
 						identifier='image'
-						placeholder='Imagen principal del producto'
+						placeholder='Product Main Image'
 					></ProductInputImage>
 					<ProductInputGallery
 						required
@@ -205,7 +205,7 @@ export function ProductAdder() {
 						}}
 						name='Galeria'
 						identifier='gallery'
-						placeholder='Selecciona las imagenes de galeria del producto'
+						placeholder='Select product gallery images'
 					></ProductInputGallery>
 					<ProductInput
 						value={data.driveUrl as string}
@@ -216,7 +216,7 @@ export function ProductAdder() {
 						name='Drive Url'
 						identifier='driveUrl'
 						type='text'
-						placeholder='Link del archivo'
+						placeholder='File link'
 					></ProductInput>
 					<ProductInput
 						value={data.weight as number}
@@ -228,7 +228,7 @@ export function ProductAdder() {
 						identifier='weight'
 						type='number'
 						step='0.01'
-						placeholder='Peso del archivo'
+						placeholder='File weight'
 					></ProductInput>
 					{progress > 0 ? (
 						<div>
@@ -256,7 +256,7 @@ export function ProductAdder() {
 							type='submit'
 							className='px-4 py-2 w-44 h-14 flex flex-row items-center justify-center gap-2 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
 						>
-							Guardar
+							Save
 						</button>
 					)}
 				</form>

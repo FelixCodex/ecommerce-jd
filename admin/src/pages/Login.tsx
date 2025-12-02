@@ -1,13 +1,13 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UserCog2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { SparkleGradient } from './Loading';
 
 export default function Login() {
 	const [data, setData] = useState({
-		username: 'admin',
-		password: '123',
+		username: '',
+		password: '',
 		remember: false,
 	});
 	const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -30,7 +30,7 @@ export default function Login() {
 	return (
 		<main className='w-full bg-gray-50 h-screen flex items-start justify-center'>
 			<div className='w-full h-full flex items-center justify-center'>
-				<div className='bg-indigo-500 p-[2px] rounded-xl border border-gray-200'>
+				<div className='bg-indigo-500 bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 p-[2px] rounded-xl border border-gray-200'>
 					<form
 						className='p-7 gap-8 bg-white rounded-[10px] w-[420px] flex flex-col items-center justify-center'
 						onSubmit={handleSubmitLogin}
@@ -40,7 +40,11 @@ export default function Login() {
 								Admin Login
 							</h2>
 							<span>
-								<UserCog2 className='w-12 h-12 text-indigo-500' />
+								<SparkleGradient
+									width={60}
+									height={60}
+									className={loadingSubmit ? 'loader' : ''}
+								/>
 							</span>
 						</div>
 						<div className='flex flex-col gap-2 w-full'>

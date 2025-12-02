@@ -4,8 +4,8 @@ import { Sidebar, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 const link_style =
-	'text-indigo-900 hover:text-indigo-500 py-2 px-3 rounded-md bg-indigo-50 text-xl w-full flex items-center';
-const selected_style = 'bg-indigo-200 hover:text-indigo-900';
+	'text-indigo-800 hover:text-indigo-700 hover:bg-indigo-100 py-2 px-3 rounded-md text-xl font-medium w-full flex items-center';
+const selected_style = 'bg-indigo-200 hover:bg-indigo-200';
 
 export function Navbar() {
 	const location = useLocation();
@@ -28,9 +28,9 @@ export function Navbar() {
 			<div
 				className={`bg-white z-20 fixed ${
 					mobileOpen ? 'left-0' : '-left-full'
-				} lg:static flex rounded-r-lg shadow-gray-300 flex-col shadow min-w-72 w-72 h-full transition-[left]`}
+				} lg:static flex shadow-gray-300 flex-col shadow min-w-72 w-72 h-full transition-[left]`}
 			>
-				<span className='flex items-center justify-between p-4 h-[73px] text-2xl font-bold text-indigo-600 border-b border-gray-200 w-full'>
+				<span className='flex items-center justify-between p-4 h-[73px] text-2xl font-bold text-indigo-600 bg-indigo-50 border-b border-gray-200 w-full'>
 					Admin Dashboard
 					<button
 						className='p-2 rounded-md border  items-center justify-center border-gray-300 text-gray-600 cursor-pointer hover:border-gray-400 transition-colors flex lg:hidden'
@@ -136,7 +136,7 @@ export function Navbar() {
 					<a
 						draggable={false}
 						href={`${API_URL}d/auth`}
-						className={`text-white hover:bg-indigo-600 bg-indigo-500 py-2 px-3 flex items-center w-full rounded-md text-xl`}
+						className={`text-white font-medium hover:bg-indigo-600 bg-indigo-500 py-2 px-3 flex items-center w-full rounded-md text-xl`}
 					>
 						Auth Drive
 					</a>

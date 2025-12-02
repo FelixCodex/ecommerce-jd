@@ -6,21 +6,27 @@ import { Search } from 'lucide-react';
 
 function PaymentCard({ payment }: { payment: PaymentInterface }) {
 	return (
-		<div className='w-full border-2 bg-white border-gray-400 rounded-lg hover:shadow-lg hover:scale-[101%] transition-[scale,box-shadow] shadow-md p-3 flex flex-row justify-between gap-1'>
+		<div className='w-full border-2 bg-white border-gray-400 rounded-lg hover:shadow-lg hover:scale-[101%] transition-[scale,box-shadow] shadow-md p-3 flex flex-row flex-wrap justify-between gap-1'>
 			<div className='flex flex-col justify-between items-start text-2xl gap-1'>
-				<p className='text-xl'>
-					ID: <span className='ml-2 font-semibold'>{payment.id}</span>
+				<p className='text-xl items-center flex'>
+					ID:{' '}
+					<span className='ml-2 md:font-semibold text-sm md:text-base'>
+						{payment.id}
+					</span>
 				</p>
-				<p className='flex justify-start text-xl'>
-					UserID: <span className='ml-2 font-semibold'>{payment.userId}</span>
+				<p className='flex justify-start text-xl items-center'>
+					UserID:{' '}
+					<span className='ml-2 md:font-semibold text-sm md:text-base'>
+						{payment.userId}
+					</span>
 				</p>
 				<p className='flex justify-start text-xl'>
 					Price: $<span className='font-semibold'>{payment.price}</span>
 				</p>
 			</div>
-			<div className='flex flex-col justify-between items-end gap-1'>
+			<div className='flex flex-col justify-between items-start md:items-end gap-1 w-full md:w-auto'>
 				<div
-					className={`flex justify-center rounded-md w-48 ${
+					className={`flex justify-center rounded-md w-full md:w-48 ${
 						payment.state == '1'
 							? 'bg-blue-400'
 							: payment.state == '2'
@@ -37,14 +43,14 @@ function PaymentCard({ payment }: { payment: PaymentInterface }) {
 					</p>
 				</div>
 				{payment.bookingDate && (
-					<p className=' text-xl'>{`Pagado el ${createDateTextFromLanguage(
-						'es',
+					<p className=' text-xl'>{`Paid at ${createDateTextFromLanguage(
+						'en',
 						new Date(payment.bookingDate)
 					)}`}</p>
 				)}
 
-				<p className=' text-xl'>{`Creado el ${createDateTextFromLanguage(
-					'es',
+				<p className=' text-xl'>{`Created at ${createDateTextFromLanguage(
+					'en',
 					new Date(payment.created_at)
 				)}`}</p>
 			</div>
@@ -63,7 +69,7 @@ export function Payments() {
 			payment.state.toLowerCase().includes(filter.toLowerCase())
 	);
 	return (
-		<div className='w-screen h-screen flex pt-12 p-4 flex-col items-center'>
+		<div className='w-screen h-screen flex pt-14 p-4 flex-col items-center'>
 			<div className='w-full max-w-[83.12rem] bg-white rounded-lg shadow flex items-center'>
 				<input
 					type='text'

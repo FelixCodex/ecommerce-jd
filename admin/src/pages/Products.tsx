@@ -52,7 +52,7 @@ function ProductCard({
 									}}
 								>
 									<Edit className='text-blue-400 h-7 w-7'></Edit>
-									<span className='text-blue-400 text-xl'>Editar</span>
+									<span className='text-blue-400 text-xl'>Edit</span>
 								</button>
 								<button
 									className='min-h-12 w-fit h-fit px-1 flex-row items-center justify-center gap-2 text-sm font-medium rounded-md text-gray-50 dark:text-gray-30 border-2 border-red-400 dark:hover:bg-gray-70  hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500'
@@ -79,9 +79,8 @@ function ProductCard({
 									<TriangleAlert className='text-red-400 h-7 w-7 min-w-7 min-h-7' />
 									<span className='text-red-400 text-xl'>
 										{product.driveId
-											? product.weight &&
-											  'El producto no tiene un peso asignado'
-											: 'El producto no tiene un archivo asignado!'}
+											? product.weight && `Product has not a weight assigned`
+											: `Product has not a file link assigned`}
 									</span>
 								</button>
 							</div>
@@ -90,7 +89,13 @@ function ProductCard({
 							{product.description}
 						</p>
 						<p className='text-2xl flex items-center dark:text-gray-5 p-1 px-2 rounded-xl bg-gray-100 border-2 border-gray-300'>
-							From ${product.personal} to ${product.professional}
+							{product.personal == 0 && product.professional == 0 ? (
+								<>Free</>
+							) : (
+								<>
+									From ${product.personal} to ${product.professional}
+								</>
+							)}
 						</p>
 					</div>
 				</div>

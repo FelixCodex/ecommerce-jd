@@ -37,7 +37,7 @@ function UserCard({
 	};
 
 	return (
-		<div className='w-full flex flex-col p-2 bg-white dark:bg-gray-80 border-2 shadow-md hover:shadow-lg hover:scale-[101%] transition-[scale,box-shadow] border-gray-400 dark:border-gray-5 gap-1 rounded-lg'>
+		<div className='w-full flex flex-col p-2 bg-gray-50 dark:bg-gray-80 border-2 shadow-md hover:shadow-lg hover:scale-[101%] transition-[scale,box-shadow] border-gray-400 dark:border-gray-5 gap-1 rounded-lg'>
 			<div className='flex'>
 				<div className='w-full mx-1 flex flex-row justify-between gap-2'>
 					<div className='w-full flex flex-wrap flex-row justify-between gap-2'>
@@ -50,12 +50,14 @@ function UserCard({
 								Email: <span className='ml-4 font-medium'>{user.email}</span>
 							</p>
 						</div>
-						<div className='flex flex-col'>
+						<div className='flex flex-col gap-1 md:gap-0'>
 							<p className='w-full text-lg md:text-xl flex justify-start text-start lg:justify-end dark:text-gray-5'>
-								<span className='ml-4 text-xl text-indigo-800'>{user.id}</span>
+								<span className='md:ml-4 text-sm md:text-lg lg:text-xl text-indigo-800'>
+									{user.id}
+								</span>
 							</p>
-							<p className='w-full text-lg md:text-xl flex justify-start lg:justify-end dark:text-gray-5'>
-								Creado el {createDateTextFromLanguage('es', date)}
+							<p className='w-full text-lg md:text-xl flex justify-start sm:justify-end dark:text-gray-5'>
+								Created at {createDateTextFromLanguage('en', date)}
 							</p>
 						</div>
 					</div>
@@ -107,7 +109,7 @@ export function Users() {
 						setFilter(e.target.value);
 						if (e.target.value == '') search();
 					}}
-					placeholder='Buscar usuario'
+					placeholder='Search user'
 					className='w-full text-2xl rounded-l-lg h-14 p-4 focus:outline-indigo-500'
 				/>
 				<button
@@ -119,7 +121,7 @@ export function Users() {
 			</div>
 			<div className='w-full max-w-[83.12rem] max-h-screen p-2 overflow-auto flex flex-col gap-4 items-center'>
 				{loadingUsers ? (
-					<span className='text-2xl'>Cargando usuarios...</span>
+					<span className='text-2xl'>Loading users...</span>
 				) : users && users.length > 0 ? (
 					<>
 						{filteredUsers &&
@@ -133,7 +135,7 @@ export function Users() {
 							})}
 					</>
 				) : (
-					<span className='text-2xl'>No se encontro ningun usuario</span>
+					<span className='text-2xl'>There are no users</span>
 				)}
 			</div>
 		</div>

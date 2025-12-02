@@ -45,14 +45,14 @@ export function ProductInputGallery({
 		<div className='relative w-full'>
 			<label
 				htmlFor={identifier}
-				className='absolute top-[-14px] left-3 px-1 bg-gray-50 font-medium text-gray-600 text-lg'
+				className='absolute top-[-14px] left-3 px-1 from-gray-50 to-white bg-gradient-to-b font-medium text-gray-600 text-lg'
 			>
 				{name}
 			</label>
 			<span
 				className={`cursor-pointer flex items-center w-full h-16 text-2xl ${
 					files ? 'text-gray-800' : 'text-gray-500'
-				} overflow-hidden bg-gray-50 border-2 border-solid border-gray-400 hover:border-indigo-600 focus:outline-indigo-600 rounded-md p-1.5`}
+				} overflow-hidden bg-white border-2 border-solid border-gray-400 hover:border-indigo-600 focus:outline-indigo-600 rounded-md p-1.5`}
 				onClick={handleClick}
 			>
 				{files ? `${files.length} archivos seleccionados` : placeholder}
