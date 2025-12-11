@@ -1,11 +1,9 @@
-import { connectDB } from '../../db.js';
+import { execute } from '../../db.js';
 import { generateRandomCharacters } from '../../libs/utils.js';
-
-const connection = await connectDB();
 
 class CommentModel {
 	static async getAll() {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT id, HEX(userId) userId, userName, productId, comment, created_at FROM comments ORDER BY created_at desc'
 		);
 
@@ -13,7 +11,7 @@ class CommentModel {
 	}
 
 	static async getById({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT id, HEX(userId) userId, userName, productId, comment, created_at FROM comments WHERE id = ?;',
 			[id]
 		);
@@ -24,7 +22,7 @@ class CommentModel {
 	}
 
 	static async getByUserId({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT id, HEX(userId) userId, userName, productId, comment, created_at FROM comments WHERE userId = UNHEX(?);',
 			[id]
 		);
@@ -33,7 +31,7 @@ class CommentModel {
 	}
 
 	static async getByProductId({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT id, HEX(userId) userId, userName, productId, comment, created_at FROM comments WHERE productId = ?;',
 			[id]
 		);
@@ -45,13 +43,13 @@ class CommentModel {
 		try {
 			const uuid = generateRandomCharacters(8);
 
-			await connection.execute(
+			await execute(
 				`INSERT INTO comments(id, userId,userName, productId, comment) 
           VALUES(?,UNHEX(REPLACE("${userId}", "-","")),?,?, ?)`,
 				[uuid, userName, productId, message]
 			);
 
-			const comment = await connection.execute(
+			const comment = await execute(
 				'SELECT id, HEX(userId) userId, userName, productId, comment, created_at FROM comments WHERE id = ?;',
 				[uuid]
 			);
@@ -67,7 +65,7 @@ class CommentModel {
 
 	static async update({ id, message }) {
 		try {
-			await connection.execute(`UPDATE comments SET comment=? WHERE id = ?`, [
+			await execute(`UPDATE comments SET comment=? WHERE id = ?`, [
 				message,
 				id,
 			]);
@@ -80,7 +78,7 @@ class CommentModel {
 
 	static async deleteById({ id }) {
 		try {
-			await connection.execute(`DELETE FROM comments WHERE id = ?;`, [id]);
+			await execute(`DELETE FROM comments WHERE id = ?;`, [id]);
 			return {};
 		} catch (e) {
 			console.log(e);
@@ -90,10 +88,7 @@ class CommentModel {
 
 	static async deleteByUserId({ userId }) {
 		try {
-			await connection.execute(
-				`DELETE FROM comments WHERE userId = UNHEX(?);`,
-				[userId]
-			);
+			await execute(`DELETE FROM comments WHERE userId = UNHEX(?);`, [userId]);
 			return {};
 		} catch (e) {
 			console.log(e);

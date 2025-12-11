@@ -1,13 +1,11 @@
-import { connectDB } from '../../db.js';
+import { execute } from '../../db.js';
 import crypto from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import PaymentModel from './payment.model.js';
 
-const connection = await connectDB();
-
 class UserModel {
 	static async getAll() {
-		const user = await connection.execute(
+		const user = await execute(
 			'SELECT HEX(id) id, username, email, created_at FROM users'
 		);
 		if (user.rows.length == 0) return { error: ['User not found'] };
@@ -16,7 +14,7 @@ class UserModel {
 	}
 
 	static async getById({ id }) {
-		const user = await connection.execute(
+		const user = await execute(
 			'SELECT HEX(id) id, username, email, preferences FROM users WHERE id = UNHEX(?);',
 			[id]
 		);
@@ -26,7 +24,7 @@ class UserModel {
 	}
 
 	static async getByEmail({ email }) {
-		const user = await connection.execute(
+		const user = await execute(
 			'SELECT HEX(id) id, username, email, preferences, fromGoogle FROM users WHERE email = ?;',
 			[email]
 		);
@@ -36,7 +34,7 @@ class UserModel {
 	}
 
 	static async getByIdWithCart({ id }) {
-		const user = await connection.execute(
+		const user = await execute(
 			'SELECT HEX(id) id, username, email, preferences, cart FROM users WHERE id = UNHEX(?);',
 			[id]
 		);
@@ -46,10 +44,9 @@ class UserModel {
 	}
 
 	static async getCartById({ id }) {
-		const cart = await connection.execute(
-			'SELECT cart FROM users WHERE id = UNHEX(?);',
-			[id]
-		);
+		const cart = await execute('SELECT cart FROM users WHERE id = UNHEX(?);', [
+			id,
+		]);
 
 		if (cart.rows.length == 0) return { error: ['User not found'] };
 
@@ -79,7 +76,7 @@ class UserModel {
 				notifications: true,
 			});
 
-			await connection.execute(
+			await execute(
 				`INSERT INTO users(id, username, password, email, preferences, fromGoogle) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")),?,?,?,?,?)`,
 				[username, encryptedPass, email, preferences, fromGoogle]
@@ -103,7 +100,7 @@ class UserModel {
 	static async authenticate({ input }) {
 		const { password, email } = input;
 
-		const user = await connection.execute(
+		const user = await execute(
 			'SELECT HEX(id) id, username, email, password, preferences FROM users WHERE email = ?;',
 			[email]
 		);
@@ -129,31 +126,23 @@ class UserModel {
 	}
 
 	static async preferences({ preferences, id }) {
-		await connection.execute(
-			'UPDATE users SET preferences=? WHERE id = UNHEX(?);',
-			[preferences, id]
-		);
-	}
-
-	static async updateCart({ id, value }) {
-		await connection.execute('UPDATE users SET cart=? WHERE id = UNHEX(?);', [
-			value,
+		await execute('UPDATE users SET preferences=? WHERE id = UNHEX(?);', [
+			preferences,
 			id,
 		]);
 	}
 
+	static async updateCart({ id, value }) {
+		await execute('UPDATE users SET cart=? WHERE id = UNHEX(?);', [value, id]);
+	}
+
 	static async clearCart({ id }) {
-		await connection.execute(
-			"UPDATE users SET cart='[]' WHERE id = UNHEX(?);",
-			[id]
-		);
+		await execute("UPDATE users SET cart='[]' WHERE id = UNHEX(?);", [id]);
 	}
 
 	static async delete({ id }) {
 		try {
-			await connection.execute(`DELETE FROM comments WHERE id = UNHEX(?);`, [
-				id,
-			]);
+			await execute(`DELETE FROM comments WHERE id = UNHEX(?);`, [id]);
 		} catch (e) {
 			console.log(e);
 		}
@@ -162,20 +151,16 @@ class UserModel {
 
 class Validate {
 	static async usernameInDB(username) {
-		const users = await connection.execute(
-			`SELECT * FROM users where username = ?`,
-			[username]
-		);
+		const users = await execute(`SELECT * FROM users where username = ?`, [
+			username,
+		]);
 
 		if (users.rows.length == 0) return false;
 		return true;
 	}
 
 	static async emailsInDB(email) {
-		const users = await connection.execute(
-			`SELECT * FROM users where email = ?`,
-			[email]
-		);
+		const users = await execute(`SELECT * FROM users where email = ?`, [email]);
 
 		if (users.rows.length == 0) return false;
 		return true;

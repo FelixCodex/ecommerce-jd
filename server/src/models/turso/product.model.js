@@ -1,11 +1,9 @@
-import { connectDB } from '../../db.js';
+import { execute } from '../../db.js';
 import { generateRandomCharacters } from '../../libs/utils.js';
-
-const connection = await connectDB();
 
 class ProductModel {
 	static async getAll() {
-		const products = await connection.execute(
+		const products = await execute(
 			'SELECT id, title, description, personal, professional, image, gallery, created_at, weight, isFree FROM products ORDER BY `created_at` desc'
 		);
 		products.rows.map(item => (item.gallery = JSON.parse(item.gallery)));
@@ -15,7 +13,7 @@ class ProductModel {
 	}
 
 	static async getAllWithDrive() {
-		const products = await connection.execute(
+		const products = await execute(
 			'SELECT id, title, description, personal, professional, image, gallery, created_at, driveId, weight, isFree FROM products ORDER BY `created_at` desc'
 		);
 		products.rows.map(item => (item.gallery = JSON.parse(item.gallery)));
@@ -25,7 +23,7 @@ class ProductModel {
 	}
 
 	static async getById({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT id, title, description, personal, professional, image, driveId, weight, isFree FROM  products WHERE id = ?;',
 			[id]
 		);
@@ -38,7 +36,7 @@ class ProductModel {
 	}
 
 	static async getMultipleById({ ids }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT id, title, description, personal, professional, image, weight, isFree FROM products WHERE id IN(?);',
 			ids
 		);
@@ -67,7 +65,7 @@ class ProductModel {
 
 		try {
 			const id = generateRandomCharacters(8);
-			await connection.execute(
+			await execute(
 				`INSERT INTO products(id, title, description, personal, professional, image, gallery, driveId, weight, isFree) 
           VALUES(?,?,?,?,?,?,?,?,?,?)`,
 				[
@@ -84,7 +82,7 @@ class ProductModel {
 				]
 			);
 
-			const product = await connection.execute(
+			const product = await execute(
 				'SELECT id, title, description, personal, professional FROM products WHERE id = ?;',
 				[id]
 			);
@@ -98,7 +96,7 @@ class ProductModel {
 
 	static async delete({ id }) {
 		try {
-			await connection.execute(`DELETE FROM products WHERE id = ?;`, [id]);
+			await execute(`DELETE FROM products WHERE id = ?;`, [id]);
 			return {};
 		} catch (e) {
 			console.log(e);
@@ -116,7 +114,7 @@ class ProductModel {
 		weight,
 	}) {
 		try {
-			await connection.execute(
+			await execute(
 				`UPDATE products SET title=?, description=?, personal=?, professional=?, driveId=?, weight=?  WHERE id = ?`,
 				[title, description, personal, professional, driveId, weight, id]
 			);
@@ -129,10 +127,10 @@ class ProductModel {
 
 	static async updateDriveInfo({ driveId, weight }) {
 		try {
-			await connection.execute(
-				`UPDATE products SET driveId=?, weight=? WHERE id = ?`,
-				[driveId, weight]
-			);
+			await execute(`UPDATE products SET driveId=?, weight=? WHERE id = ?`, [
+				driveId,
+				weight,
+			]);
 			return {};
 		} catch (e) {
 			console.log(e);

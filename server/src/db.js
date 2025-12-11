@@ -9,6 +9,16 @@ const connection = createClient({
 	authToken: TURSO_AUTH,
 });
 
+export async function execute(statement, args, tag) {
+	try {
+		return await connection.execute(statement, args);
+	} catch (error) {
+		console.log('Error in: ', tag);
+		console.log('Error: ', error);
+		return { rows: [] };
+	}
+}
+
 console.log('>> DB CONNECTED');
 
 export async function connectDB() {

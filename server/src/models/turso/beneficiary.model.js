@@ -1,10 +1,8 @@
-import { connectDB } from '../../db.js';
-
-const connection = await connectDB();
+import { execute } from '../../db.js';
 
 class BeneficiaryModel {
 	static async getAll() {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, name ,ratingBeforeMax ,ratingAfterMax ,max ,paid ,accumulation ,created_at FROM beneficiarys;'
 		);
 
@@ -12,7 +10,7 @@ class BeneficiaryModel {
 	}
 
 	static async getById({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, name ,ratingBeforeMax ,ratingAfterMax ,max ,paid ,accumulation ,created_at FROM beneficiarys WHERE id = UNHEX(?)',
 			[id]
 		);
@@ -24,7 +22,7 @@ class BeneficiaryModel {
 
 	static async create({ id, name, ratingBeforeMax, ratingAfterMax, max }) {
 		try {
-			await connection.execute(
+			await execute(
 				`INSERT INTO beneficiarys(id, name ,ratingBeforeMax ,ratingAfterMax ,max ) 
        VALUES(UNHEX(REPLACE("${id}", "-","")),?,?,?,?);`,
 				[name, ratingBeforeMax, ratingAfterMax, max]
@@ -38,10 +36,7 @@ class BeneficiaryModel {
 
 	static async delete({ id }) {
 		try {
-			await connection.execute(
-				'DELETE FROM beneficiarys WHERE id = UNHEX(?);',
-				[id]
-			);
+			await execute('DELETE FROM beneficiarys WHERE id = UNHEX(?);', [id]);
 			return {};
 		} catch (e) {
 			console.log(e);
@@ -50,7 +45,7 @@ class BeneficiaryModel {
 	}
 
 	static async pay({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, name ,ratingBeforeMax ,ratingAfterMax ,max ,paid ,accumulation ,created_at FROM beneficiarys WHERE id = UNHEX(?)',
 			[id]
 		);
@@ -58,7 +53,7 @@ class BeneficiaryModel {
 
 		try {
 			const accum = product.rows[0].paid + product.rows[0].accumulation;
-			await connection.execute(
+			await execute(
 				'UPDATE beneficiarys SET paid=?, accumulation=0 WHERE id = UNHEX(?)',
 				[accum, id]
 			);
@@ -71,7 +66,7 @@ class BeneficiaryModel {
 
 	static async addAccum({ id, accum }) {
 		try {
-			await connection.execute(
+			await execute(
 				'UPDATE beneficiarys SET accumulation=? WHERE id = UNHEX(?)',
 				[accum, id]
 			);

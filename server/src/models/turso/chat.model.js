@@ -1,10 +1,8 @@
-import { connectDB } from '../../db.js';
-
-const connection = await connectDB();
+import { execute } from '../../db.js';
 
 class ChatModel {
 	static async getAllChats() {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, seen FROM userChats;'
 		);
 
@@ -14,7 +12,7 @@ class ChatModel {
 	}
 
 	static async getAllMessages() {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, isMessageFromUser, message ,created_at FROM chats ORDER BY `created_at` asc;'
 		);
 
@@ -24,7 +22,7 @@ class ChatModel {
 	}
 
 	static async getById({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, isMessageFromUser, message ,created_at FROM chats WHERE id = UNHEX(?)',
 			[id]
 		);
@@ -35,7 +33,7 @@ class ChatModel {
 	}
 
 	static async getMessageByUserId({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, isMessageFromUser, message ,created_at FROM chats WHERE userId = UNHEX(?) ORDER BY `created_at` asc;',
 			[id]
 		);
@@ -45,7 +43,7 @@ class ChatModel {
 	}
 
 	static async getChatByUserId({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, seen FROM userChats WHERE userId = UNHEX(?)',
 			[id]
 		);
@@ -55,7 +53,7 @@ class ChatModel {
 
 	static async createNewMessage({ uuid, userId, message }) {
 		try {
-			await connection.execute(
+			await execute(
 				`INSERT INTO chats(id, userId, message) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")), UNHEX(REPLACE("${userId}", "-","")),?)`,
 				[message]
@@ -69,7 +67,7 @@ class ChatModel {
 
 	static async createAdminNewMessage({ uuid, userId, message }) {
 		try {
-			await connection.execute(
+			await execute(
 				`INSERT INTO chats(id, userId, message, isMessageFromUser) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")), UNHEX(REPLACE("${userId}", "-","")),?,"false")`,
 				[message]
@@ -83,11 +81,11 @@ class ChatModel {
 
 	static async createNewChat({ uuid, chatId, userId, message }) {
 		try {
-			await connection.execute(
+			await execute(
 				`INSERT INTO userChats(id, userId) 
           VALUES(UNHEX(REPLACE("${chatId}", "-","")), UNHEX(REPLACE("${userId}", "-","")));`
 			);
-			await connection.execute(
+			await execute(
 				`INSERT INTO chats(id, userId, message) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")), UNHEX(REPLACE("${userId}", "-","")),?);`,
 				[message]
@@ -100,15 +98,14 @@ class ChatModel {
 	}
 
 	static async setSeen({ id }) {
-		await connection.execute(
-			"UPDATE userChats SET seen='true' WHERE id = UNHEX(?);",
-			[id]
-		);
+		await execute("UPDATE userChats SET seen='true' WHERE id = UNHEX(?);", [
+			id,
+		]);
 	}
 
 	static async setUnseen({ userId }) {
 		try {
-			await connection.execute(
+			await execute(
 				"UPDATE userChats SET seen='false' WHERE userId = UNHEX(?);",
 				[userId]
 			);
@@ -119,10 +116,7 @@ class ChatModel {
 
 	static async deleteChatByUserId({ userId }) {
 		try {
-			await connection.execute(
-				'DELETE FROM userChats WHERE userId = UNHEX(?);',
-				[userId]
-			);
+			await execute('DELETE FROM userChats WHERE userId = UNHEX(?);', [userId]);
 		} catch (err) {
 			console.log(err);
 		}
@@ -130,9 +124,7 @@ class ChatModel {
 
 	static async deleteChatById({ id }) {
 		try {
-			await connection.execute('DELETE FROM userChats WHERE id = UNHEX(?);', [
-				id,
-			]);
+			await execute('DELETE FROM userChats WHERE id = UNHEX(?);', [id]);
 		} catch (err) {
 			console.log(err);
 		}
@@ -140,9 +132,7 @@ class ChatModel {
 
 	static async deleteMessagesByUserId({ userId }) {
 		try {
-			await connection.execute('DELETE FROM chats WHERE userId = UNHEX(?);', [
-				userId,
-			]);
+			await execute('DELETE FROM chats WHERE userId = UNHEX(?);', [userId]);
 		} catch (err) {
 			console.log(err);
 		}
@@ -150,7 +140,7 @@ class ChatModel {
 
 	static async deleteMessageById({ id }) {
 		try {
-			await connection.execute('DELETE FROM chats WHERE id = UNHEX(?);', [id]);
+			await execute('DELETE FROM chats WHERE id = UNHEX(?);', [id]);
 		} catch (err) {
 			console.log(err);
 		}

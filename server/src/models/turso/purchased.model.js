@@ -1,11 +1,9 @@
-import { connectDB } from '../../db.js';
+import { execute } from '../../db.js';
 import crypto from 'node:crypto';
-
-const connection = await connectDB();
 
 class PurchasedModel {
 	static async getAll() {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT HEX(purchaseId) purchaseId, HEX(userId) userId, productId, purchased_at FROM purchased_products;'
 		);
 
@@ -15,7 +13,7 @@ class PurchasedModel {
 	}
 
 	static async getById({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT HEX(purchaseId) purchaseId, HEX(userId) userId, productId, purchased_at FROM purchased_products WHERE id = UNHEX(?);',
 			[id]
 		);
@@ -26,7 +24,7 @@ class PurchasedModel {
 	}
 
 	static async getByUserId({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT HEX(purchaseId) id, HEX(userId) userId, productId, purchased_at, image FROM purchased_products WHERE userId = UNHEX(?);',
 			[id]
 		);
@@ -35,7 +33,7 @@ class PurchasedModel {
 	}
 
 	static async getByUserIdAndId({ userId, id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT HEX(purchaseId) id, HEX(userId) userId, productId, purchased_at, image FROM purchased_products WHERE userId = UNHEX(?) AND purchaseId = UNHEX(?);',
 			[userId, id]
 		);
@@ -44,7 +42,7 @@ class PurchasedModel {
 	}
 
 	static async getByUserIdAndProductId({ userId, id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT HEX(purchaseId) id, HEX(userId) userId, productId, purchased_at, image FROM purchased_products WHERE userId = UNHEX(?) AND productId = ?;',
 			[userId, id]
 		);
@@ -53,9 +51,10 @@ class PurchasedModel {
 	}
 
 	static async getByUserIdRestricted({ id }) {
-		const purchase = await connection.execute(
+		const purchase = await execute(
 			'SELECT productId id, image, title, purchased_at FROM purchased_products WHERE userId = UNHEX(?);',
-			[id]
+			[id],
+			'getByUserIdRestricted'
 		);
 
 		return purchase.rows;
@@ -65,13 +64,13 @@ class PurchasedModel {
 		try {
 			const uuid = crypto.randomUUID();
 
-			await connection.execute(
+			await execute(
 				`INSERT INTO purchased_products(purchaseId, userId, productId , image, title) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")),UNHEX(REPLACE("${userId}", "-","")),?,?, ?)`,
 				[productId, image, title]
 			);
 
-			const purchase = await connection.execute(
+			const purchase = await execute(
 				`SELECT HEX(purchaseId) purchaseId, HEX(userId) userId, productId, purchased_at, image,title FROM purchased_products WHERE purchaseId = UNHEX(REPLACE("${uuid}", "-",""));`
 			);
 
@@ -106,7 +105,7 @@ class PurchasedModel {
 			console.log('String: ', string);
 			console.log('Values: ', values);
 
-			await connection.execute(
+			await execute(
 				`INSERT INTO purchased_products(purchaseId, userId, productId, image, title) 
           VALUES${string}`,
 				values
@@ -119,10 +118,9 @@ class PurchasedModel {
 
 	static async deleteByUserId({ userId }) {
 		try {
-			await connection.execute(
-				'DELETE FROM purchased_products WHERE userId = UNHEX(?);',
-				[userId]
-			);
+			await execute('DELETE FROM purchased_products WHERE userId = UNHEX(?);', [
+				userId,
+			]);
 		} catch (err) {
 			console.log(err);
 		}
@@ -130,10 +128,9 @@ class PurchasedModel {
 
 	static async deleteById({ id }) {
 		try {
-			await connection.execute(
-				'DELETE FROM purchased_products WHERE id = UNHEX(?);',
-				[id]
-			);
+			await execute('DELETE FROM purchased_products WHERE id = UNHEX(?);', [
+				id,
+			]);
 		} catch (err) {
 			console.log(err);
 		}

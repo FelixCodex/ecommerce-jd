@@ -1,10 +1,8 @@
-import { connectDB } from '../../db.js';
-
-const connection = await connectDB();
+import { execute } from '../../db.js';
 
 class PaymentModel {
 	static async getAll() {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, state, created_at, price, bookingDate, orderId FROM payments ORDER BY `created_at` desc;'
 		);
 
@@ -14,7 +12,7 @@ class PaymentModel {
 	}
 
 	static async getAllCompleted() {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, state, created_at, price FROM payments WHERE state=2 ;'
 		);
 
@@ -24,7 +22,7 @@ class PaymentModel {
 	}
 
 	static async getById({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, cart, state, shortURL, created_at,price FROM payments WHERE id = UNHEX(?);',
 			[id]
 		);
@@ -40,7 +38,7 @@ class PaymentModel {
 	}
 
 	static async getByUserId({ id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, cart, state, shortURL, created_at, price FROM payments WHERE userId = UNHEX(?);',
 			[id]
 		);
@@ -55,7 +53,7 @@ class PaymentModel {
 	}
 
 	static async getHexUUID({ uuid }) {
-		const product = await connection.execute(
+		const product = await execute(
 			`SELECT HEX(UNHEX(REPLACE('${uuid}', '-',''))) uuid`
 		);
 
@@ -63,13 +61,13 @@ class PaymentModel {
 	}
 
 	static async getDateTime() {
-		const product = await connection.execute(`SELECT CURRENT_TIMESTAMP`);
+		const product = await execute(`SELECT CURRENT_TIMESTAMP`);
 
 		return product.rows[0].CURRENT_TIMESTAMP;
 	}
 
 	static async getByUserIdAndId({ userId, id }) {
-		const product = await connection.execute(
+		const product = await execute(
 			'SELECT HEX(id) id, HEX(userId) userId, cart, state, shortURL, created_at, price FROM payments WHERE userId = UNHEX(?) AND id = UNHEX(?);',
 			[userId, id]
 		);
@@ -87,7 +85,7 @@ class PaymentModel {
 
 	static async create({ uuid, userId, cart, shortURL, price }) {
 		try {
-			await connection.execute(
+			await execute(
 				`INSERT INTO payments(id, cart, shortURL, userId, price) 
           VALUES(UNHEX(REPLACE("${uuid}", "-","")),?,?,UNHEX(REPLACE("${userId}", "-","")),?)`,
 				[cart, shortURL, price]
@@ -101,14 +99,14 @@ class PaymentModel {
 
 	static async setCompletedById({ uuid, order, bookingDate }) {
 		console.log('Data to set completed: ', { uuid, order, bookingDate });
-		await connection.execute(
+		await execute(
 			'UPDATE payments SET state=2, orderId=?, bookingDate=? WHERE id = UNHEX(?);',
 			[order, bookingDate, uuid]
 		);
 	}
 
 	static async setFailedById({ uuid, order, bookingDate }) {
-		await connection.execute(
+		await execute(
 			'UPDATE payments SET state=0, orderId=?, bookingDate=? WHERE id = UNHEX(?);',
 			[order, bookingDate, uuid]
 		);
