@@ -16,17 +16,17 @@ import {
 import {
 	addProductToCartRequest,
 	getCartRequest,
-	getFreeRequest,
 	removeProductFromCartRequest,
 } from '../Api/cart.ts';
 import { CartProduct, License, PurchasedProduct } from '../types/index.ts';
 import { getPurchasedRequest, getRateRequest } from '../Api/payment.ts';
 import { log_data, log_error } from '../utils.ts';
+import { useAuth } from './auth.context.tsx';
 
 export const CartContext = createContext({
 	state: [] as CartProduct[],
-	addToCart: (id: string, l: License) => {},
-	removeFromCart: (id: string) => {},
+	addToCart: (_id: string, _l: License) => {},
+	removeFromCart: (_id: string) => {},
 	clearCart: () => {},
 	clearPurchased: () => {},
 	clearCartFromClient: () => {},
@@ -36,7 +36,7 @@ export const CartContext = createContext({
 	loadingPurchased: true,
 	purchased: [] as PurchasedProduct[],
 	rate: 0,
-	addPurchase: (purchase: PurchasedProduct) => {},
+	addPurchase: (_purchase: PurchasedProduct) => {},
 });
 
 function useCartReducer() {
@@ -48,8 +48,9 @@ function useCartReducer() {
 	const cartQueue = useRef<{ id: string; l: License }[]>([]);
 	const [purchased, setPurchased] = useState([] as PurchasedProduct[]);
 
+	const { logged } = useAuth();
+
 	const loadCart = async () => {
-		if (loadingCart) return;
 		setLoadingCart(true);
 		try {
 			log_data('Starting cart request');
@@ -110,10 +111,15 @@ function useCartReducer() {
 	};
 
 	useEffect(() => {
-		loadCart();
-		loadPurchased();
 		loadRate();
 	}, []);
+
+	useEffect(() => {
+		if (!loadingCart) {
+			loadCart();
+		}
+		loadPurchased();
+	}, [logged]);
 
 	const addToCart = async (id: string, l: License) => {
 		cartQueue.current = [...cartQueue.current, { id, l }];

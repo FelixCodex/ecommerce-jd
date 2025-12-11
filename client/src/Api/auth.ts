@@ -31,5 +31,5 @@ export const logoutRequest = async (): Promise<AxiosReturn> => {
 export const preferencesRequest = async (
 	preferences: Preferences
 ): Promise<AxiosReturn> => {
-	return await axiosPostRequest(`/preferences`, preferences);
+	return await axiosPostRequest(`/preferences`, { preferences });
 };

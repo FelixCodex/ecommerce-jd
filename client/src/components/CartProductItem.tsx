@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CartProduct, Preferences } from '../types';
 import { IMG_API_URL, LANGUAGE } from '../consts';
-import { CircleDashed, Trash2 } from 'lucide-react';
+import { CircleDashed, Image, ImageOff, Trash2 } from 'lucide-react';
 
 export function CartProductItem({
 	product,
@@ -15,24 +15,44 @@ export function CartProductItem({
 	handleRemoveElement: (id: string) => void;
 }) {
 	const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+	const [imageFailed, setImageFailed] = useState(false);
 
 	const calculatePrice = () => {
+		const license = product[product.license];
 		return `${
 			LANGUAGE.CURRENCIES[preferences.currency]
-		}${(preferences.currency == 'USD'
-			? product[product.license] / rate
-			: product[product.license]
-		).toFixed(2)}`;
+		}${(preferences.currency == 'USD' ? license / rate : license).toFixed(2)}`;
 	};
 
 	return (
-		<div className='w-full flex flex-row shadow-md p-4 bg-[--bg_sec] rounded-lg'>
-			<div>
+		<div className='w-full flex flex-row shadow-md p-4 bg-[--bg_sec] rounded-xl'>
+			<div className='aspect-square w-32 relative bg-[--light_800] overflow-hidden rounded-xl'>
+				<div
+					className={`w-full h-full absolute top-0 left-0 items-center justify-center z-0 ${
+						imageFailed ? 'hidden' : 'flex bg-loader'
+					}`}
+				>
+					<Image className='w-8 h-8 text-[--light_500]' />
+				</div>
 				<img
 					src={`${IMG_API_URL}${product.image}.webp`}
 					alt={product.title}
-					className='h-20 w-20 sm:h-24 sm:w-24 md:h-32 md:w-32 text-[8px] aspect-video object-cover rounded-md border-2 border-[--light_500] text-[--light_900]'
+					onError={e => {
+						const img = e.target as HTMLImageElement;
+						setImageFailed(true);
+						img.onerror = null;
+					}}
+					className={`h-20 w-20 sm:h-24 sm:w-24 md:h-32 md:w-32 text-[8px] object-cover rounded-md border border-[--light_500] text-[--light_900] ${
+						imageFailed ? 'hidden' : 'flex'
+					}`}
 				/>
+				<div
+					className={` relative z-10 overflow-hidden w-full h-full items-center gap-4 justify-center ${
+						imageFailed ? 'flex' : 'hidden'
+					}`}
+				>
+					<ImageOff className='w-8 h-8 text-[--light_400] z-10' />
+				</div>
 			</div>
 			<div className='w-full ml-4 flex flex-row justify-between'>
 				<p className='w-full text-lg md:text-2xl flex items-start text-[--light_50]'>
@@ -40,7 +60,7 @@ export function CartProductItem({
 				</p>
 				<div className='flex flex-col-reverse justify-between items-end'>
 					<button
-						className='w-20 h-7 px-1 flex flex-row items-center justify-center gap-1 text-sm font-medium rounded-md text-[--light_400] border border-[--light_400] hover:text-[--light_200] hover:border-[--light_200] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500'
+						className='w-20 h-7 px-1 flex flex-row items-center justify-center transition-[box-shadow] gap-1 text-sm font-medium rounded-md text-[--light_400] border border-[--light_400] hover:text-[--light_200] hover:border-[--light_200] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[--light_700] focus:ring-amber-500'
 						onClick={() => {
 							handleRemoveElement(product.id);
 							setLoadingSubmit(true);

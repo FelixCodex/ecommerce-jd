@@ -6,11 +6,12 @@ import { useState } from 'react';
 import { Product, Sections } from '../types';
 import { formatDateTime } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { CircleDashed, Clock, X } from 'lucide-react';
+import { Clock, X } from 'lucide-react';
 import { usePreferences } from '../hooks/usePreferences';
 import { LANGUAGE } from '../consts';
 import { useAuth } from '../context/auth.context';
 import { useComment } from '../context/comments.context';
+import { EllipsisAnimated } from './Elements/EllipsisAnimated';
 
 export function ProductInformationSection({ product }: { product: Product }) {
 	const [section, setSection] = useState<Sections>('info');
@@ -147,10 +148,10 @@ export function ProductInformationSection({ product }: { product: Product }) {
 				<div className='flex flex-col gap-4'>
 					{loadingComments ? (
 						<div className='flex items-center justify-center gap-2'>
-							<CircleDashed className='w-6 h-6 loader text-[--light_50]'></CircleDashed>
 							<p className='text-center text-xl font-medium text-[--light_100]'>
-								{LANGUAGE.PRODUCT.LOADING_COMMENTS[preferences.language]}
+								{LANGUAGE.LOADING[preferences.language]}
 							</p>
+							<EllipsisAnimated />
 						</div>
 					) : (
 						<>

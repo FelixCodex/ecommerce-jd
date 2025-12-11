@@ -15,14 +15,14 @@ export function ProductItemCheckOut({
 	return (
 		<div
 			key={'chr-' + product.id + CId}
-			className='flex justify-between items-center'
+			className='flex justify-between text-[--light_200] items-center'
 		>
 			<div key={'chr-0' + product.id + CId}>
-				<h3 className='font-medium text-[--light_100]'>{product.title}</h3>
+				<h3 className='font-medium'>{product.title}</h3>
 			</div>
 			<span
 				key={'chr-1' + product.id + CId}
-				className='font-semibold text-[--light_100]'
+				className='font-semibold'
 			>
 				{LANGUAGE.CURRENCIES[preferences.currency]}
 				{(preferences.currency == 'USD'

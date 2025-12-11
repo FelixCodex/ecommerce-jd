@@ -3,8 +3,10 @@ import type { Preferences, ProgressDataI, PurchasedProduct } from '../types';
 import { IMG_API_URL, LANGUAGE } from '../consts';
 import { createDateTextFromLanguage } from '../utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { RefreshCw, X } from 'lucide-react';
+import { Image, RefreshCw, X } from 'lucide-react';
 import { useDownload } from '../context/download.context';
+import { ImageLoading } from './Elements/ImageLoading';
+import { ImageUnavaliable } from './Elements/ImageUnavalilable';
 
 interface ProductCardProps {
 	product: PurchasedProduct;
@@ -21,6 +23,7 @@ export function PurchasedProductCard({
 	const [downloadData, setDownloadData] = useState<ProgressDataI | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const controller = useRef<AbortController | null>(null);
+	const [imageFailed, setImageFailed] = useState(false);
 
 	const handleDownload = async () => {
 		setIsDownloading(true);
@@ -96,13 +99,26 @@ export function PurchasedProductCard({
 	}, [downloadData]);
 
 	return (
-		<div className='border border-[--light_400] hover:shadow-md transition-[box-shadow] rounded-lg p-4'>
-			<img
-				src={`${IMG_API_URL}${product.image}.webp`}
-				alt={product.title}
-				draggable={false}
-				className='w-full h-72 object-cover rounded-lg aspect-auto text-[--light_0] bg-[--bg_prim]'
-			/>
+		<div className='bg-[--light_900] hover:shadow-md hover:-translate-y-1 transition-[box-shadow,transform] rounded-xl p-4'>
+			<div className='aspect-video w-full rounded-lg relative overflow-hidden'>
+				<ImageLoading loading={!imageFailed}>
+					<Image className='w-36 h-36 text-[--light_600]' />
+				</ImageLoading>
+				<img
+					src={`${IMG_API_URL}${product.image}.webp`}
+					alt={product.title}
+					draggable={false}
+					onError={e => {
+						const img = e.target as HTMLImageElement;
+						setImageFailed(true);
+						img.onerror = null;
+					}}
+					className={`w-full h-full object-cover z-10 text-[--light_0] bg-[--bg_prim] ${
+						imageFailed ? 'hidden' : 'flex'
+					}`}
+				/>
+				<ImageUnavaliable show={imageFailed} />
+			</div>
 			<h3 className='mt-4 text-lg font-semibold text-[--light_0]'>
 				{product.title}
 			</h3>
@@ -122,16 +138,16 @@ export function PurchasedProductCard({
 					</span>
 				</button>
 			) : isDownloading ? (
-				<div className='mt-4 h-fit flex w-full rounded-lg'>
-					<div className='w-full h-[3.75rem] rounded-lg'>
-						<div className='w-full h-10 bg-[--light_400] overflow-hidden rounded-lg'>
+				<div className='mt-4 h-fit flex w-full rounded-lg gap-1'>
+					<div className='w-full h-fit rounded-lg flex flex-col gap-1'>
+						<div className='w-full h-9 bg-[--light_400] overflow-hidden rounded-2xl'>
 							<div
-								className='bg-[--button_purchased] transition-[width] max-w-full flex items-center justify-end h-10 rounded-lg'
+								className='bg-[--button_purchased] transition-[width] max-w-full flex items-center justify-end h-9 rounded-2xl'
 								style={{
 									width: `${downloadData ? downloadData.progress : 0}%`,
 								}}
 							>
-								<p
+								<span
 									className={`text-lg font-medium text-[--light_100] ${
 										downloadData
 											? downloadData.progress > 10
@@ -141,29 +157,31 @@ export function PurchasedProductCard({
 									}`}
 								>
 									{`${downloadData ? downloadData.progress : 0}%`}
-								</p>
+								</span>
 							</div>
 						</div>
-						<div className='w-full flex justify-between text-[--light_100] items-center px-1 h-5'>
+						<div className='w-full flex flex-col sm:flex-row items-start justify-between text-[--light_200] sm:items-center px-1 h-fit text-sm font-medium'>
 							<div className='flex items-center justify-center gap-2'>
-								<p className='text-sm font-medium'>
-									{LANGUAGE.DASHBOARD.SPEED[preferences.language]}: {velocity()}
+								<p className=''>
+									{LANGUAGE.DASHBOARD.SPEED[preferences.language]}:{' '}
+									<span className='text-[--light_100]'>{velocity()}</span>
 								</p>
-								<p className='text-sm font-medium'>
+								<span>-</span>
+								<p className=''>
 									{LANGUAGE.DASHBOARD.ESTTIME[preferences.language]}:{' '}
-									{estimatedTime()}
+									<span className='text-[--light_100]'>{estimatedTime()}</span>
 								</p>
 							</div>
-							<p className='text-sm font-medium'>
-								{loaded()}/{total()}
+							<p className=''>
+								{loaded()} / {total()}
 							</p>
 						</div>
 					</div>
-					<div className='w-10 flex items-center justify-end h-full'>
-						<X
-							className='h-10 w-10 p-1 transition-colors  hover:bg-[--light_500] border border-transparent hover:border-[--light_400] rounded-full'
-							onClick={handleCancel}
-						></X>
+					<div
+						className='h-9 w-9 p-1 flex items-center justify-end cursor-pointer transition-colors hover:bg-[--light_600] border border-transparent hover:border-[--light_500] rounded-full'
+						onClick={handleCancel}
+					>
+						<X className='text-[--light_100]'></X>
 					</div>
 				</div>
 			) : (

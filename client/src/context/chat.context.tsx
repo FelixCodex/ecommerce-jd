@@ -9,6 +9,7 @@ import {
 import { ChatMessage } from '../types';
 import { getMessagesRequest } from '../Api/chat';
 import { log_data, log_error } from '../utils';
+import { useAuth } from './auth.context';
 
 interface ChatContextType {
 	isInChat: boolean;
@@ -49,12 +50,12 @@ export const ChatContext = createContext<ChatContextType>({
 	errorMessage: [] as LoadingMessage[],
 	chat: [] as ChatMessage[],
 	setNotSeenMessagesToSeen: () => {},
-	addMessageToChat: (chatMesssage: ChatMessage) => {},
+	addMessageToChat: (_chatMesssage: ChatMessage) => {},
 	loadMessages: () => {},
-	addLoadingMessage: (message: LoadingMessage) => {},
-	removeLoadingMessage: (message: LoadingMessage) => {},
-	addErrorMessage: (message: LoadingMessage) => {},
-	removeErrorMessage: (message: LoadingMessage) => {},
+	addLoadingMessage: (_message: LoadingMessage) => {},
+	removeLoadingMessage: (_message: LoadingMessage) => {},
+	addErrorMessage: (_message: LoadingMessage) => {},
+	removeErrorMessage: (_message: LoadingMessage) => {},
 	clearChat: () => {},
 });
 
@@ -66,6 +67,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
 	const [chat, setChat] = useState([] as ChatMessage[]);
 	const [loadingMessage, setLoadingMessage] = useState([] as LoadingMessage[]);
 	const [errorMessage, setErrorMessage] = useState([] as LoadingMessage[]);
+
+	const { logged } = useAuth();
 
 	const addMessageToChat = useCallback((chatMessage: ChatMessage) => {
 		setChat(prevChat => [...prevChat, chatMessage]);
@@ -128,7 +131,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
 	useEffect(() => {
 		loadMessages();
-	}, []);
+	}, [logged]);
 
 	const setIsChatOpen = (bool: boolean) => {
 		setIsOpen(bool);

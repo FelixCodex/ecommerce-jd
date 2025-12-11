@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, CircleDashed } from 'lucide-react';
 import { FormEvent, MouseEvent, useEffect, useId, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -7,22 +7,18 @@ import { LANGUAGE } from '../consts';
 import { usePreferences } from '../hooks/usePreferences';
 import { useSocket } from '../hooks/useSocket';
 import { UserInterface } from '../types';
-import { GoogleButton } from '../components/GoogleButton';
-import { ODivisor } from '../components/ODivisor';
+import { GoogleButton } from '../components/Elements/GoogleButton';
+import { ODivisor } from '../components/Elements/ODivisor';
 import { useAuth } from '../context/auth.context';
 import { useCart } from '../context/cart.context';
 import { useChat } from '../context/chat.context';
 import { InputText } from '../components/form/InputTextAuth';
 import { InputPassword } from '../components/form/InputPassword';
+import { CheckBox } from '../components/form/CheckBox';
+import { AxiosError, AxiosResponse } from 'axios';
 
 interface SubmitClickProps {
 	e: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>;
-}
-
-interface AxiosResult {
-	status: number;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	response: { data: any };
 }
 
 export default function Login() {
@@ -32,7 +28,7 @@ export default function Login() {
 		rememberMe: false,
 	});
 
-	const [validation, setValidation] = useState({
+	const [validation, setValState] = useState({
 		email: null as boolean | null,
 		password: null as boolean | null,
 		emailShake: false,
@@ -54,16 +50,23 @@ export default function Login() {
 	const { connectUserToMessageChannel } = useSocket();
 	const language = preferences.language;
 
+	const setValidation = (
+		propertie: 'email' | 'password' | 'emailShake' | 'passwordShake',
+		state: boolean | null
+	) => {
+		setValState(prev => ({ ...prev, [propertie]: state }));
+	};
+
 	const validateEmail = (value: string): boolean => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		const isValid = emailRegex.test(value);
-		setValidation(prev => ({ ...prev, email: isValid }));
+		setValidation('email', isValid);
 		return isValid;
 	};
 
 	const validatePassword = (value: string): boolean => {
 		const isValid = value.length >= 6;
-		setValidation(prev => ({ ...prev, password: isValid }));
+		setValidation('password', isValid);
 		return isValid;
 	};
 
@@ -81,59 +84,73 @@ export default function Login() {
 		setFormState(prev => ({ ...prev, rememberMe: !prev.rememberMe }));
 	};
 
+	const setReqState = (
+		propertie: 'errors' | 'loading' | 'success',
+		state: string[] | boolean
+	) => {
+		setRequestState(prev => ({ ...prev, [propertie]: state }));
+	};
+
 	const resetForm = () => {
 		setFormState(prev => ({ ...prev, email: '', password: '' }));
-		setRequestState(prev => ({ ...prev, errors: [] }));
+		setReqState('errors', []);
 	};
 
 	const handleSubmit = async ({ e }: SubmitClickProps) => {
 		e.preventDefault();
-		console.log('Starting auth request');
 
 		const { email, password, rememberMe } = formState;
 		const isEmailValid = validation.email || validateEmail(email);
 		const isPasswordValid = validation.password || validatePassword(password);
+		setReqState('errors', []);
 
 		if (isEmailValid && isPasswordValid) {
-			setRequestState(prev => ({ ...prev, loading: true }));
-			console.log('All fine for auth');
+			setReqState('loading', true);
 
 			try {
-				const res = (await signIn({
+				const res = await signIn({
 					email,
 					password,
 					remember: rememberMe,
-				})) as AxiosResult;
+				});
 
-				if (res.status === 200) {
-					const userInfo = res.response.data as UserInterface;
+				if (res.success) {
+					const response = res.response as AxiosResponse;
+					const userInfo = response.data as UserInterface;
 					resetForm();
-					setRequestState(prev => ({ ...prev, success: true }));
+					setReqState('success', true);
 					connectUserToMessageChannel(userInfo);
 				} else {
-					setRequestState(prev => ({ ...prev, errors: res.response.data }));
+					const error = res.error as AxiosError;
+					if (!error) throw new Error('Unkown Error');
+					const response = error.response;
+					console.log('Error: ', error.message);
+					if (!response) throw new Error(error.message);
+					console.log('Response: ', response);
+					setReqState('errors', response.data as string[]);
 				}
 			} catch (error) {
-				console.error(error);
-				setRequestState(prev => ({
-					...prev,
-					errors: ['Something went wrong'],
-				}));
+				const message = (error as { message: string }).message;
+				if (message == 'Network Error') {
+					setReqState('errors', ['Check your connection']);
+					return;
+				}
+				setReqState('errors', ['Something went wrong']);
 			} finally {
-				setRequestState(prev => ({ ...prev, loading: false }));
+				setReqState('loading', false);
 			}
 		} else {
 			if (!isEmailValid) {
-				setValidation(prev => ({ ...prev, emailShake: true }));
+				setValidation('emailShake', true);
 				setTimeout(() => {
-					setValidation(prev => ({ ...prev, emailShake: false }));
+					setValidation('emailShake', false);
 				}, 500);
 			}
 
 			if (!isPasswordValid) {
-				setValidation(prev => ({ ...prev, passwordShake: true }));
+				setValidation('passwordShake', true);
 				setTimeout(() => {
-					setValidation(prev => ({ ...prev, passwordShake: false }));
+					setValidation('passwordShake', false);
 				}, 500);
 			}
 		}
@@ -181,86 +198,79 @@ export default function Login() {
 					</h1>
 				</header>
 
-				<section className='bg-[--bg_sec] rounded-lg shadow-md p-7'>
+				<section className='bg-[--bg_sec] rounded-xl shadow-md p-7'>
 					<form
 						className='space-y-7'
 						onSubmit={e => handleSubmit({ e })}
 						aria-label='Login form'
 					>
-						<InputText
-							label={LANGUAGE.REGISTER.EMAIL[preferences.language]}
-							id='email-address'
-							name='email'
-							type='email'
-							required
-							value={email}
-							setValue={value => handleInputChange('email', value)}
-							validateValue={validateEmail}
-							shake={emailShake}
-							valValue={validation.email}
-							val_valid={LANGUAGE.REGISTER.EMAIL_VALID[preferences.language]}
-							val_not_valid={
-								LANGUAGE.REGISTER.EMAIL_NOT_VALID[preferences.language]
-							}
-						/>
+						<div className='flex flex-col gap-3'>
+							<InputText
+								label={LANGUAGE.REGISTER.EMAIL[preferences.language]}
+								id='email-address'
+								name='email'
+								type='email'
+								required
+								value={email}
+								setValue={value => handleInputChange('email', value)}
+								validateValue={validateEmail}
+								shake={emailShake}
+								valValue={validation.email}
+								val_valid={LANGUAGE.REGISTER.EMAIL_VALID[preferences.language]}
+								val_not_valid={
+									LANGUAGE.REGISTER.EMAIL_NOT_VALID[preferences.language]
+								}
+							/>
 
-						<InputPassword
-							label={LANGUAGE.REGISTER.PASS[preferences.language]}
-							id='password'
-							name='password'
-							password={password}
-							setPassword={value => handleInputChange('password', value)}
-							validatePassword={validatePassword}
-							shake={passwordShake}
-							valPassword={validation.password}
-							pass_valid={LANGUAGE.REGISTER.PASS_VALID[preferences.language]}
-							pass_not_valid={
-								LANGUAGE.REGISTER.PASS_NOT_VALID[preferences.language]
-							}
-							pass_not_match={
-								LANGUAGE.REGISTER.PASS_NOT_MATCH[preferences.language]
-							}
-						/>
+							<InputPassword
+								label={LANGUAGE.REGISTER.PASS[preferences.language]}
+								id='password'
+								name='password'
+								password={password}
+								setPassword={value => handleInputChange('password', value)}
+								validatePassword={validatePassword}
+								shake={passwordShake}
+								valPassword={validation.password}
+								pass_valid={LANGUAGE.REGISTER.PASS_VALID[preferences.language]}
+								pass_not_valid={
+									LANGUAGE.REGISTER.PASS_NOT_VALID[preferences.language]
+								}
+								pass_not_match={
+									LANGUAGE.REGISTER.PASS_NOT_MATCH[preferences.language]
+								}
+							/>
+						</div>
 
 						{/* Error messages */}
 						{errors.length > 0 && (
 							<div
-								className='flex items-center justify-between'
+								className='flex items-center flex-col gap-1 justify-between w-full'
 								role='alert'
 							>
-								<div className='flex items-center'>
-									{errors.map((error, index) => (
+								{errors.map((error, index) => (
+									<div className='flex items-center justify-start gap-2 w-full p-1 px-2 rounded-md bg-red-600/20 border border-red-500'>
+										<AlertTriangle className='w-5 h-5 text-[--wrong]' />
 										<p
 											key={`${errorIdKey}-${index}`}
-											className='block text-sm'
-											style={{ color: 'var(--wrong)' }}
+											className='block text-[--wrong]'
 										>
-											{error}
+											{error}{' '}
 										</p>
-									))}
-								</div>
+									</div>
+								))}
 							</div>
 						)}
 
 						{/* Remember me and Register link */}
 						<div className='flex items-center justify-between flex-col'>
 							<div className='flex flex-col md:flex-row items-start gap-2 md:items-center justify-between w-full'>
-								<div className='flex items-center'>
-									<input
-										id='remember-me'
-										name='remember-me'
-										type='checkbox'
-										checked={rememberMe}
-										onChange={toggleRememberMe}
-										className='h-4 w-4 rounded'
-									/>
-									<label
-										htmlFor='remember-me'
-										className='ml-2 block text-sm md:text-base text-[--light_300]'
-									>
-										{LANGUAGE.LOGIN.REMEMBERME[language]}
-									</label>
-								</div>
+								<CheckBox
+									checked={rememberMe}
+									onClick={() => {
+										toggleRememberMe();
+									}}
+									label={LANGUAGE.LOGIN.REMEMBERME[language]}
+								/>
 
 								<div className='text-sm md:text-base'>
 									<Link
@@ -279,15 +289,14 @@ export default function Login() {
 								type='submit'
 								disabled={!isFormValid || loading}
 								aria-busy={loading}
-								className={`
-                  group h-12 relative w-full flex justify-center items-center py-2 px-4 
-                  border border-transparent text-md font-medium rounded-md text-[--light_900]
-                  ${
-										!isFormValid
-											? 'cursor-not-allowed bg-[--button_not_allowed]'
-											: 'bg-[--button] hover:bg-[--button_hover] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[--button]'
-									}
-                `}
+								className={`group h-12 relative w-full flex justify-center items-center py-2 px-4 
+                  							border border-transparent  text-md font-medium rounded-md text-[--light_900]
+											${
+												!isFormValid
+													? 'cursor-not-allowed bg-[--button_not_allowed]'
+													: 'bg-[--button] hover:bg-[--button_hover] transition-[box-shadow] focus:ring-offset-[--bg_prim] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[--button]'
+											}
+                						`}
 							>
 								{loading ? (
 									<CircleDashed

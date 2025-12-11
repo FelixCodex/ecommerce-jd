@@ -23,10 +23,10 @@ export const DownloadContext = createContext<DownloadContextType>({
 	lastRecord: [],
 	progressData: [],
 	startDownload: (
-		id: string,
-		title: string,
-		controller: AbortController,
-		onFinish?: () => void
+		_id: string,
+		_title: string,
+		_controller: AbortController,
+		_onFinish?: () => void
 	) => {},
 });
 

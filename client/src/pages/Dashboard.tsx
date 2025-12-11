@@ -22,11 +22,11 @@ export default function Dashboard() {
 	};
 
 	return (
-		<main className='min-h-screen-minus-64 dottedBackground'>
+		<main className='min-h-screen-minus-64 dottedBackground pt-2'>
 			<article className='max-w-7xl mx-auto px-4 py-8'>
 				<section className='grid grid-cols-1 gap-6'>
 					<div className='lg:col-span-1'>
-						<div className='bg-[--bg_sec] flex gap-4 md:gap-0 justify-between flex-col md:flex-row items-start md:items-center rounded-lg shadow-md p-7'>
+						<div className='bg-[--bg_sec] flex gap-4 md:gap-0 justify-between flex-col md:flex-row items-start md:items-center rounded-xl shadow-md p-7'>
 							<div className='flex flex-col items-start gap-1'>
 								<h2
 									className={`${
@@ -39,13 +39,14 @@ export default function Dashboard() {
 											: 'text-4xl'
 									} font-semibold text-[--light_0]`}
 								>
-									Hola, {user ? user.username : 'Default Username'}
+									{LANGUAGE.DASHBOARD.HI[preferences.language]},{' '}
+									{user ? user.username : 'Default Username'}
 								</h2>
 								<p className='text-[--light_200] text-xl'>
 									{user ? user.email : 'defaultemail@gmail.com'}
 								</p>
 							</div>
-							<nav className=' flex flex-row-reverse md:flex-col w-full md:w-44 gap-3'>
+							<nav className='flex flex-col min-[360px]:flex-row-reverse md:flex-col w-full md:w-44 gap-3'>
 								<Link
 									to='/dashboard/settings'
 									className='flex w-full justify-center border border-[--light_400] items-center px-4 py-2 text-[--light_200]  hover:bg-[--bg_prim] rounded-lg'
@@ -54,7 +55,7 @@ export default function Dashboard() {
 									<>{LANGUAGE.DASHBOARD.SETTINGS[preferences.language]}</>
 								</Link>
 								<Link
-									to='/login'
+									to='/'
 									className='flex w-full justify-center border border-[--light_400] items-center px-4 py-2 text-[--light_200] hover:bg-[--bg_prim] rounded-lg'
 									onClick={handleLogOutClick}
 								>

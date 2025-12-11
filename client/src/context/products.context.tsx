@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
 import { getProductsRequest } from '../Api/products';
 import { Product } from '../types';
 import { log_data, log_error } from '../utils';
@@ -33,7 +39,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
 		localStorage.setItem('products', JSON.stringify(products));
 	};
 
-	const getProducts = async () => {
+	const getProducts = useCallback(async () => {
 		setLoadingProducts(true);
 		try {
 			const req = await getProductsRequest();
@@ -52,11 +58,11 @@ export function ProductProvider({ children }: ProductProviderProps) {
 		} finally {
 			setLoadingProducts(false);
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		getProducts();
-	}, []);
+	}, [getProducts]);
 
 	return (
 		<ProductContext.Provider value={{ products, loadingProducts }}>

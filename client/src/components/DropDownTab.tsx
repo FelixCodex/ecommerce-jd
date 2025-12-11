@@ -17,13 +17,13 @@ export function DropDownTab({
 		<div
 			className={`w-full flex ${
 				currentQuestion == id ? 'gap-2 ' : 'gap-0'
-			} flex-col p-3 border cursor-pointer shadow-md border-[--light_200] transition-[gap] rounded-lg`}
+			} flex-col p-3 border cursor-pointer shadow-md border-[--light_500] transition-[gap] rounded-lg`}
 			onClick={() =>
 				currentQuestion == id ? setCurrentQuestion('') : setCurrentQuestion(id)
 			}
 		>
 			<div className='w-full flex justify-between items-center gap-1'>
-				<p className='text-md'>{question}</p>
+				<p className='text-md text-[--light_0]'>{question}</p>
 				{currentQuestion == id ? (
 					<ChevronUp className='text-[--light_200]' />
 				) : (
@@ -33,7 +33,7 @@ export function DropDownTab({
 			<div
 				className={`${
 					currentQuestion == id ? 'max-h-80 ' : 'max-h-0 '
-				} transition-[max-height] duration-1000 text-[--light_800] overflow-hidden`}
+				} transition-[max-height] duration-1000 text-[--light_100] overflow-hidden`}
 			>
 				<p>{answer}</p>
 			</div>

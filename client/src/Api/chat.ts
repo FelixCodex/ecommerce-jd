@@ -7,5 +7,5 @@ export const sendMessageRequest = async (
 };
 
 export const getMessagesRequest = async (): Promise<AxiosReturn> => {
-	return await axiosGetRequest(`/message/user`);
+	return await axiosGetRequest(`/messages/user`);
 };

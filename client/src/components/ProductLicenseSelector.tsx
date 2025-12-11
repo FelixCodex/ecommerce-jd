@@ -171,7 +171,7 @@ export function ProductLicenseSelector({ product }: { product: Product }) {
 						isInPurchased
 							? 'hidden'
 							: product.isFree
-							? 'bg-[--button_cart_now] hover:bg-[--button_cart_hover_now] flex'
+							? 'bg-[--button_cart_now] hover:bg-[--button_cart_now_hover] flex'
 							: 'hidden'
 					} text-white font-medium rounded-xl  transition-colors`}
 					disabled={loadingSubmit}

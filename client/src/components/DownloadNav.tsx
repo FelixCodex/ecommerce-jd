@@ -35,12 +35,12 @@ export function DownloadNav({ className }: { className?: string }) {
 					</div>
 				</button>
 				<div
-					className={`w-full h-fit rounded-xl bg-[--bg_sec] border border-[--button_not_allowed] absolute top-0 transition-transform duration-300 ${
+					className={`w-full h-fit rounded-xl bg-[--bg_sec] border border-[--light_500] absolute top-0 transition-transform duration-300 ${
 						isOpen ? 'translate-x-0' : 'translate-x-[120%]'
 					}`}
 				>
-					<div className='w-full flex justify-between items-center border-b border-[--button_not_allowed] p-2'>
-						<p className='text-lg font-medium text-[--light_100]'>
+					<div className='w-full flex justify-between items-center border-b border-[--light_500] p-2'>
+						<p className='text-lg font-medium pl-1 text-[--light_50]'>
 							{LANGUAGE.DASHBOARD.DOWNLOADS[preferences.language]} (
 							{progressData.length})
 						</p>

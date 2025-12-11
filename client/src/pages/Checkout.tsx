@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { COUNTRIES, LANGUAGE } from '../consts';
+import { LANGUAGE } from '../consts';
 import { usePreferences } from '../hooks/usePreferences';
 import { InputTextCheckOut } from '../components/form/InputTextCheckOut';
 import { InputSelectPhone } from '../components/form/InputSelectPhone';
@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUrlParam, log_error } from '../utils';
 import { useCart } from '../context/cart.context';
 import { useProduct } from '../context/products.context';
+import { COUNTRIES } from '../countries';
 
 export default function Checkout() {
 	const { state: cart, loadCart, loadingCart, purchased, rate } = useCart();
@@ -220,11 +221,11 @@ export default function Checkout() {
 		<main className='min-h-screen-minus-64 dottedBackground py-12'>
 			<div className='max-w-7xl mx-auto px-4'>
 				<section className='max-w-full mx-auto mb-10'>
-					<div className='bg-[--bg_sec] md:dark:bg-transparent md:bg-transparent rounded-lg'>
+					<div className='bg-[--bg_sec] md:dark:bg-transparent md:bg-transparent rounded-xl'>
 						<div className='flex flex-col md:flex-row-reverse md:justify-center md:gap-3 shadow-md md:shadow-none p-6 md:p-0'>
 							<div className='w-full flex flex-col md:flex-row-reverse md:justify-center md:gap-3'>
 								{/* Order Summary Section */}
-								<aside className='md:bg-[--bg_sec] md:p-6 md:rounded-lg md:shadow-md w-full md:max-w-80 lg:max-w-[22.5rem] flex flex-col max-h-full h-fit mb-6 md:!mb-0'>
+								<aside className='md:bg-[--bg_sec] md:p-6 md:rounded-xl md:shadow-md w-full md:max-w-80 lg:max-w-[22.5rem] flex flex-col max-h-full h-fit mb-6 md:!mb-0'>
 									<h1 className='text-2xl font-bold text-[--light_0] mb-8'>
 										{LANGUAGE.CHECKOUT.TITLE[preferences.language]}
 									</h1>
@@ -281,7 +282,7 @@ export default function Checkout() {
 								</aside>
 
 								{/* Payment Form Section */}
-								<section className='md:bg-[--bg_sec] md:p-6 md:rounded-lg md:shadow-md w-full max-w-2xl flex flex-col gap-3'>
+								<section className='md:bg-[--bg_sec] md:p-6 md:rounded-xl md:shadow-md w-full max-w-2xl flex flex-col gap-3'>
 									<h2 className='text-[--light_0] text-xl font-bold'>
 										{LANGUAGE.CHECKOUT.PAYMENT_METHODS[preferences.language]}
 									</h2>

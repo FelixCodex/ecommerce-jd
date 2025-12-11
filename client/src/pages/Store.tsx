@@ -1,10 +1,10 @@
-import { CircleDashed } from 'lucide-react';
 import { LANGUAGE } from '../consts';
 import { useNavigate } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard';
 import { usePreferences } from '../hooks/usePreferences';
 import { Product } from '../types';
 import { useProduct } from '../context/products.context';
+import { EllipsisAnimated } from '../components/Elements/EllipsisAnimated';
 
 export function Store() {
 	const { products, loadingProducts } = useProduct();
@@ -17,7 +17,7 @@ export function Store() {
 	};
 
 	const renderProductGrid = (products: Product[]) => (
-		<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+		<div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8'>
 			{products.map(product => (
 				<ProductCard
 					key={product.id}
@@ -30,17 +30,14 @@ export function Store() {
 
 	const renderLoading = () => (
 		<div
-			className='mt-12 flex items-center justify-center gap-2'
+			className='mt-12 flex items-end justify-center gap-2'
 			role='status'
 			aria-label='Loading products'
 		>
-			<CircleDashed
-				className='loader h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-[--light_0]'
-				aria-hidden='true'
-			/>
 			<span className='text-2xl sm:text-4xl lg:text-4xl text-[--light_0]'>
-				{LANGUAGE.STORE.LOADING[preferences.language]}
+				{LANGUAGE.LOADING[preferences.language]}
 			</span>
+			<EllipsisAnimated className='bg-[--light_50]' />
 		</div>
 	);
 
@@ -81,7 +78,7 @@ export function Store() {
 			id='store'
 			className='min-h-screen bg-[--bg_sec] dottedBackground py-8 px-6 pt-16'
 		>
-			<div className='max-w-6xl mx-auto'>
+			<div className='max-w-[112rem] mx-auto'>
 				<header className='mb-12 text-center flex items-center justify-center'>
 					<h1 className='text-4xl font-bold text-[--light_0] tracking-wide bg-[--bg_prim] w-fit py-4 border-b-2 border-[--brand_color]'>
 						{LANGUAGE.STORE.TITLE[preferences.language]}

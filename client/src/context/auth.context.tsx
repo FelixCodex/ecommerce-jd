@@ -8,6 +8,7 @@ import {
 import { Preferences, UserInterface } from '../types';
 import { useSocket } from '../hooks/useSocket';
 import { log_data, log_error } from '../utils';
+import { AxiosReturn } from '../Api/axios';
 
 interface AuthContextType {
 	user: UserInterface | null;
@@ -18,12 +19,12 @@ interface AuthContextType {
 		username: string;
 		email: string;
 		remember: boolean;
-	}) => Promise<void | unknown>;
+	}) => Promise<AxiosReturn>;
 	signIn: (user: {
 		password: string;
 		email: string;
 		remember: boolean;
-	}) => Promise<void | unknown>;
+	}) => Promise<AxiosReturn>;
 	signOut: () => void;
 	setUserPreferences: (pref: Preferences) => void;
 }
@@ -36,8 +37,12 @@ export const AuthContext = createContext<AuthContextType>({
 	user: null,
 	logged: false,
 	loadingLog: true,
-	signUp: async () => {},
-	signIn: async () => {},
+	signUp: async (): Promise<AxiosReturn> => {
+		return { success: false };
+	},
+	signIn: async (): Promise<AxiosReturn> => {
+		return { success: false };
+	},
 	signOut: async () => {},
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	setUserPreferences: async (pref: Preferences) => {},
@@ -45,7 +50,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: AuthProviderProps) {
 	const [user, setUser] = useState<UserInterface | null>(null);
-	const [logged, setLogged] = useState(true);
+	const [logged, setLogged] = useState(false);
 	const [loadingLog, setLoadingLog] = useState(true);
 	const { connectUserToMessageChannel } = useSocket();
 
@@ -57,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 	}) => {
 		try {
 			const req = await registerRequest(user);
-			if (!req.success) throw new Error('Register request failed');
+			if (!req.success) return req;
 			if (req.response?.status == 201) {
 				setUser(req.response?.data);
 				setLogged(true);
@@ -65,7 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			return req;
 		} catch (error) {
 			log_error(error);
-			return error;
+			return { success: false, error };
 		}
 	};
 
@@ -77,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		try {
 			const req = await loginRequest(user);
 			log_data(req);
-			if (!req.success) throw new Error('Register request failed');
+			if (!req.success) return req;
 			if (req.response?.status == 200) {
 				setUser(req.response?.data);
 				setLogged(true);
@@ -85,15 +90,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			return req;
 		} catch (error) {
 			log_error(error);
-			return error;
+			return { success: false, error };
 		}
 	};
 
 	const signOut = async () => {
+		setUser(null);
+		setLogged(false);
 		try {
 			await logoutRequest();
-			setUser(null);
-			setLogged(false);
 		} catch (error) {
 			console.log(error);
 			return error;

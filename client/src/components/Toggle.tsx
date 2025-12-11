@@ -1,3 +1,6 @@
+import { CheckTiny } from './Elements/CheckTiny';
+import { XTiny } from './Elements/XTiny';
+
 interface ToggleProps {
 	label: string;
 	description: string;
@@ -15,8 +18,10 @@ export function Toggle({ label, description, checked, onChange }: ToggleProps) {
 			<button
 				type='button'
 				className={`${
-					checked ? 'bg-[--button]' : 'bg-[--light_200]'
-				} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[--brand_color] focus:ring-offset-[--bg_prim] focus:ring-offset-2`}
+					checked
+						? 'bg-[--button] focus:ring-[--brand_color]'
+						: 'bg-[--light_200] focus:ring-[--light_200]'
+				} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-[background-color,box-shadow] duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[--brand_color] focus:ring-offset-[--bg_prim] focus:ring-offset-2`}
 				role='switch'
 				aria-checked={checked}
 				onClick={() => onChange(!checked)}
@@ -34,19 +39,7 @@ export function Toggle({ label, description, checked, onChange }: ToggleProps) {
 						} absolute inset-0 flex h-full w-full items-center justify-center transition-opacity`}
 						aria-hidden='true'
 					>
-						<svg
-							className='h-3 w-3 text-[--light_200]'
-							fill='none'
-							viewBox='0 0 12 12'
-						>
-							<path
-								d='M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2'
-								stroke='currentColor'
-								strokeWidth={2}
-								strokeLinecap='round'
-								strokeLinejoin='round'
-							/>
-						</svg>
+						<XTiny className='h-3 w-3 text-[--light_200]' />
 					</span>
 					<span
 						className={`${
@@ -56,13 +49,7 @@ export function Toggle({ label, description, checked, onChange }: ToggleProps) {
 						} absolute inset-0 flex h-full w-full items-center justify-center transition-opacity`}
 						aria-hidden='true'
 					>
-						<svg
-							className='h-3 w-3 text-[--brand_color]'
-							fill='currentColor'
-							viewBox='0 0 12 12'
-						>
-							<path d='M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z' />
-						</svg>
+						<CheckTiny className='h-3 w-3 text-[--brand_color]' />
 					</span>
 				</span>
 			</button>

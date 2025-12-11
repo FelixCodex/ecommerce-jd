@@ -24,6 +24,7 @@
 
 	/* Colores de marca */
 	--brand_color: #d4af37;
+	--brand_color-5: rgba(212, 175, 55, 0.05);
 	--brand_color_100: #e0c063;
 	--brand_color_400: #e9d590;
 	--brand_color_800: #f2e2b6;
@@ -251,6 +252,14 @@
 	background-size: 40px 40px;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 30px var(--bg_prim) inset !important;
+	-webkit-text-fill-color: var(--light_0) !important;
+}
+
 .loading-bar {
 	position: fixed;
 	top: 0;
@@ -293,13 +302,13 @@
 }
 
 .check {
-	top: calc(50% + 0.062rem);
-	right: -1.625rem;
+	top: calc(50%);
+	right: 0.75rem;
 }
 
 .pass-check {
 	top: calc(100% + 0.187rem);
-	right: -1.625rem;
+	right: -1.55rem;
 }
 
 .pass-check:before,
@@ -378,6 +387,10 @@
 	animation: ping 0.9s 0.9s infinite;
 }
 
+.anim-appear {
+	animation: appear 1s;
+}
+
 .bg-loader {
 	position: relative;
 	overflow: hidden !important;
@@ -387,16 +400,16 @@
 	content: '';
 	position: absolute;
 	display: block;
-	width: 100%;
-	height: 100%;
+	width: 300%;
+	height: 300%;
 	background: linear-gradient(
 		to right,
 		transparent,
-		var(--bg_protected_loading_mover),
+		var(--light_500),
 		transparent
 	);
-	transform: translateX(-100%);
-	animation: bg-loading 3s infinite;
+	transform: translate(-100%, -100%) rotateZ(45deg);
+	animation: bg-loading 2s infinite alternate ease-in-out;
 }
 
 .fill-transp {
@@ -408,21 +421,9 @@
 	background-size: contain;
 }
 
-.v1 {
-	background-image: url(javier-david-v1.webp);
-}
-
-.v2 {
-	background-image: url(javier-david-v2.webp);
-}
-
-.v3 {
-	background-image: url(javier-david-v3.webp);
-}
-
 @keyframes bg-loading {
 	100% {
-		transform: translateX(100%);
+		transform: translate(100%, 100%) rotateZ(45deg);
 	}
 }
 
@@ -452,6 +453,15 @@
 	100% {
 		transform: scale(125%);
 		opacity: 0;
+	}
+}
+
+@keyframes appear {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }
 
@@ -526,4 +536,38 @@
 	padding: 0.75rem;
 	background-color: #4b67e4;
 	border-radius: 1rem;
+}
+
+.wrapper {
+	width: 500px;
+	height: 500px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 5px;
+	background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+	overflow: hidden;
+}
+
+.wave {
+	width: 1000px;
+	height: 1025px;
+	position: absolute;
+	top: -25%;
+	left: 50%;
+	margin-left: -500px;
+	margin-top: -500px;
+	border-radius: 35%;
+	background: rgba(255, 255, 255, 0.75);
+	animation: wave 15s infinite linear;
+}
+
+@keyframes wave {
+	from {
+		transform: rotate(0deg);
+	}
+	from {
+		transform: rotate(360deg);
+	}
 }

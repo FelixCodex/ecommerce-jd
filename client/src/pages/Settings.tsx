@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { CheckCircle2, CircleDashed, SettingsIcon } from 'lucide-react';
+import { CircleDashed, SettingsIcon } from 'lucide-react';
 import { SettingsSection } from '../components/SettingsSection';
 import { preferencesRequest } from '../Api/auth';
 import { Currency, Language } from '../types';
@@ -9,6 +9,7 @@ import { LANGUAGE } from '../consts';
 import { useNavigate } from 'react-router-dom';
 import { Toggle } from '../components/Toggle';
 import { useAuth } from '../context/auth.context';
+import { CheckTiny } from '../components/Elements/CheckTiny';
 
 interface SubmitClickProps {
 	e: React.MouseEvent;
@@ -154,7 +155,7 @@ export default function Settings() {
 					<div className='mt-8 flex justify-end gap-3'>
 						<button
 							type='button'
-							className='px-5 py-2 border border-transparent text-sm font-medium rounded-md text-[--light_900] bg-[--button] hover:bg-[--button_hover] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[--bg_prim] focus:ring-[--brand_color]'
+							className='px-5 py-2 border border-transparent transition-[box-shadow] text-sm font-medium rounded-md text-[--light_900] bg-[--button] hover:bg-[--button_hover] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[--bg_prim] focus:ring-[--brand_color]'
 							onClick={() => {
 								navigate('/dashboard');
 							}}
@@ -163,7 +164,7 @@ export default function Settings() {
 						</button>
 						<button
 							type='button'
-							className='px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[--light_900] bg-[--button] hover:bg-[--button_hover] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[--bg_prim] focus:ring-[--brand_color]'
+							className='px-3 py-2 border border-transparent transition-[box-shadow] text-sm font-medium rounded-md text-[--light_900] bg-[--button] hover:bg-[--button_hover] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[--bg_prim] focus:ring-[--brand_color]'
 							onClick={e => {
 								handleSubmit({ e });
 							}}
@@ -172,10 +173,14 @@ export default function Settings() {
 							{loadingSubmit ? (
 								<CircleDashed className='loader w-4 h-4' />
 							) : (
-								<span className='flex flex-row justify-center items-center gap-1'>
+								<span className='flex flex-row justify-center items-center gap-3'>
 									{LANGUAGE.SETTINGS.SAVE[preferences.language]}
-									{saved && (
-										<CheckCircle2 className='h-4 w-4 text-[--good]'></CheckCircle2>
+									{saved ? (
+										<div className='bg-[--light_800] w-5 h-5 flex items-center justify-center p-1 rounded-full'>
+											<CheckTiny className='h-full w-full text-[--brand_color]' />
+										</div>
+									) : (
+										<></>
 									)}
 								</span>
 							)}

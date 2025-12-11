@@ -1,6 +1,6 @@
 import { Mail, Facebook, CircleDashed } from 'lucide-react';
 import { usePreferences } from '../hooks/usePreferences';
-import { LANGUAGE } from '../consts';
+import { LANGUAGE, SUPPORT_EMAIL } from '../consts';
 import { useState } from 'react';
 import { sendMailRequest } from '../Api/sendEmail';
 
@@ -44,7 +44,7 @@ export default function Contact() {
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
 						<div
-							className={`bg-[--bg_sec] rounded-lg shadow-md p-6 ${
+							className={`bg-[--bg_sec] border border-[--light_500] rounded-xl shadow-md p-6 ${
 								success != null &&
 								(success
 									? 'border-b-4 border-b-green-500'
@@ -122,16 +122,14 @@ export default function Contact() {
 							</form>
 						</div>
 
-						<div className='bg-[--bg_sec] rounded-lg shadow-md p-6'>
+						<div className='bg-[--bg_sec] rounded-xl border border-[--light_500] shadow-md p-6'>
 							<h2 className='text-2xl font-semibold mb-6 text-[--light_0]'>
 								{LANGUAGE.CONTACT.CONTACT_INFO[preferences.language]}
 							</h2>
 							<div className='space-y-4'>
 								<div className='flex items-center mb-6'>
 									<Mail className='h-5 w-5 text-[--brand_color] mr-3' />
-									<span className='text-[--light_0]'>
-										support@javier-david.com
-									</span>
+									<span className='text-[--light_0]'>{SUPPORT_EMAIL}</span>
 								</div>
 								<div className='flex items-center mb-6'>
 									<Facebook className='h-5 w-5 text-[--brand_color] mr-3' />

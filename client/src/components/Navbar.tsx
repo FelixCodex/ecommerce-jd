@@ -47,8 +47,8 @@ export function Navbar() {
 	}, [location]);
 
 	return (
-		<nav className='fixed top-0 z-[400] w-full bg-[--bg_sec]'>
-			<div className='mx-auto px-4 bg-[--bg_sec] w-full relative z-20'>
+		<nav className='fixed top-0 z-[400] w-full p-2'>
+			<div className='mx-auto px-4 bg-[--bg_sec] shadow-lg shadow-[--light_800] border border-[--light_500] w-full relative z-20 rounded-full'>
 				<div className='flex justify-end items-center h-16'>
 					{/* <Link
 						to='/'
@@ -58,7 +58,7 @@ export function Navbar() {
 						<span>{BRANDNAME}</span>
 					</Link> */}
 
-					<div className='flex items-center justify-end gap-6 -ml-5'>
+					<div className='flex items-center justify-end gap-3 sm:gap-6 -ml-5'>
 						<div className='hidden md:flex items-center relative space-x-7'>
 							<Link
 								to='/'
@@ -84,6 +84,7 @@ export function Navbar() {
 									{LANGUAGE.NAVBAR.CONTACT[preferences.language]}
 								</span>
 							</Link>
+
 							<HLine style={lineLeft} />
 						</div>
 						<UserButton
@@ -115,8 +116,8 @@ export function Navbar() {
 			</div>
 			<div
 				className={`${
-					mobileLinksShown ? 'translate-y-0' : '-translate-y-[200%]'
-				} w-full absolute bg-[--bg_sec] h-auto p-5 pt-1 z-0 transition-transform duration-300`}
+					mobileLinksShown ? 'translate-y-2' : '-translate-y-[200%]'
+				} w-[calc(100%-16px)] absolute bg-[--bg_sec] h-auto border border-[--light_500] rounded-2xl p-3 pt-2 z-0 transition-transform duration-300`}
 			>
 				<div className='flex flex-col justify-center md:hidden gap-2 items-end relative space-x-8'>
 					<span className=''></span>

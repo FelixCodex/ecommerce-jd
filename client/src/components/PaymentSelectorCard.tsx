@@ -33,8 +33,8 @@ export function PaymentSelectorCard({
 					<div
 						className={`w-full h-14 bg-[--bg_sec] border hover:cursor-pointer ${
 							payMethod == id
-								? 'border-[--brand_color]'
-								: 'border-[--light_600] hover:border-[--light_500]'
+								? 'border-[--light_500]'
+								: 'border-[--light_500] hover:border-[--light_400]'
 						}  gap-3 rounded-xl flex items-center justify-between p-3`}
 						onClick={() => setPayMethod(id)}
 					>
@@ -61,17 +61,17 @@ export function PaymentSelectorCard({
 				</>
 			) : (
 				<div
-					className={`overflow-hidden border transition-[max-height] duration-500 ${
+					className={`overflow-hidden border transition-[max-height,border-color] duration-300 ${
 						payMethod == id
-							? 'border-[--brand_color] pt-14 max-h-[46.56rem]'
-							: 'border-[--light_600] hover:border-[--light_500] pt-[3.43rem] max-h-0 cursor-pointer'
+							? 'border-[--light_400] pt-14 max-h-[46.56rem]'
+							: 'border-[--light_500] hover:border-[--light_400] pt-[3.43rem] max-h-0 cursor-pointer'
 					} rounded-xl relative`}
 				>
 					<div
-						className={`w-full h-14 bg-[--bg_sec] border-b ${
+						className={`w-[calc(100%+0.125rem)] h-14 bg-[--bg_sec] transition-[border-color] -m-px duration-300 border ${
 							payMethod == id
-								? 'border-[--brand_color]'
-								: 'border-[--light_600] hover:border-[--brand_color]'
+								? 'border-[--light_400]'
+								: 'border-[--light_500] hover:border-[--light_400]'
 						}  absolute top-0 left-0 gap-3 rounded-xl flex items-center justify-between p-3`}
 						onClick={() => setPayMethod(id)}
 					>

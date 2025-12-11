@@ -31,7 +31,7 @@ export function ProductGallery({ product }: { product: Product }) {
 
 	return (
 		<div className='w-full medias'>
-			<div className='relative aspect-video bg-[--bg_sec] rounded-lg overflow-hidden group border-2 border-[--light_500]'>
+			<div className='relative aspect-video bg-[--bg_sec] rounded-lg overflow-hidden group border border-[--light_500]'>
 				<img
 					src={product.gallery ? `${currentImage}` : ''}
 					alt={product.title}
@@ -55,7 +55,7 @@ export function ProductGallery({ product }: { product: Product }) {
 							src={`${IMG_API_URL}${product.image}.webp`}
 							alt={`Preview main-image`}
 							onMouseEnter={handleMouseEnter}
-							className='object-contain aspect-video rounded-md border-2 border-[--light_500]'
+							className='object-contain aspect-video rounded-md border border-[--light_500]'
 						/>
 					</div>
 
@@ -67,7 +67,7 @@ export function ProductGallery({ product }: { product: Product }) {
 									src={`${IMG_API_URL}${image}.webp`}
 									alt={`Preview ${index + 1}`}
 									onMouseEnter={handleMouseEnter}
-									className='w-full h-full object-cover aspect-video rounded-md border-2 border-[--light_500]'
+									className='w-full h-full object-cover aspect-video rounded-md border border-[--light_500]'
 								/>
 							</div>
 						))

@@ -23,7 +23,7 @@ export function GoogleButton({
 					width='100'
 					height='100'
 					viewBox='0 0 48 48'
-					className='w-9 h-9'
+					className='w-8 h-8'
 				>
 					<path
 						fill='#FFC107'

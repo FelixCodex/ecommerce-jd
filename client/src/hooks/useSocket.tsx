@@ -8,6 +8,11 @@ const socket = io('https://modelfantasy.up.railway.app', {
 	auth: {},
 });
 
+socket.on('connect_error', () => {});
+socket.on('error', () => {});
+socket.on('reconnect_error', () => {});
+socket.on('reconnect_failed', () => {});
+
 socket.on('connection', () => {
 	log_data('Socket connected');
 });

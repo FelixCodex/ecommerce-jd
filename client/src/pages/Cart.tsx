@@ -5,6 +5,8 @@ import { LANGUAGE } from '../consts';
 import { usePreferences } from '../hooks/usePreferences';
 import { CartProductItem } from '../components/CartProductItem';
 import { useCart } from '../context/cart.context';
+import { CartResumeItem } from '../components/CartResumeItem';
+import { EllipsisAnimated } from '../components/Elements/EllipsisAnimated';
 
 export default function Cart() {
 	const { state: cart, removeFromCart, loadingCart, rate } = useCart();
@@ -21,7 +23,7 @@ export default function Cart() {
 
 	return (
 		<div className='min-h-screen-minus-64 dottedBackground py-12'>
-			<div className='max-w-[87.25rem] mx-auto px-4'>
+			<div className='max-w-[80rem] mx-auto px-4'>
 				<div className='w-full'>
 					<h1
 						key={titleCId}
@@ -39,23 +41,19 @@ export default function Cart() {
 						>
 							{loadingCart && cart.length == 0 ? (
 								<p className='text-2xl font-medium text-[--light_200] gap-1 flex items-end justify-center'>
-									{LANGUAGE.CART.LOADING[preferences.language]}
-									<span className='ping-delay-1 w-[4px] mb-[5px] rounded-full h-[4px] bg-[--light_200]'></span>
-									<span className='ping-delay-2 w-[4px] mb-[5px] rounded-full h-[4px] bg-[--light_200]'></span>
-									<span className='ping-delay-3 w-[4px] mb-[5px] rounded-full h-[4px] bg-[--light_200]'></span>
+									{LANGUAGE.LOADING[preferences.language]}
+									<EllipsisAnimated />
 								</p>
 							) : cart.length > 0 ? (
 								cart.map(product => {
 									return (
-										<>
-											<CartProductItem
-												preferences={preferences}
-												key={'cr-' + product.id + checkCId}
-												product={product}
-												rate={rate}
-												handleRemoveElement={handleRemoveElement}
-											></CartProductItem>
-										</>
+										<CartProductItem
+											preferences={preferences}
+											key={'cr-' + product.id + checkCId}
+											product={product}
+											rate={rate}
+											handleRemoveElement={handleRemoveElement}
+										></CartProductItem>
 									);
 								})
 							) : (
@@ -73,7 +71,7 @@ export default function Cart() {
 						</div>
 						<div
 							key={checkCId}
-							className='w-full min-w-80 md:max-w-72 lg:max-w-sm bg-[--bg_sec] rounded-lg shadow-md p-4 flex flex-col gap-1 max-h-[18rem] md:sticky top-[5.5rem]'
+							className='w-full min-w-80 md:max-w-72 lg:max-w-sm bg-[--bg_sec] rounded-xl shadow-md p-4 flex flex-col gap-1 max-h-[18rem] md:sticky top-[5.5rem]'
 						>
 							{loadingCart && (
 								<CircleDashed className='loader h-6 w-6 absolute right-3 top-3 text-[--light_0]'></CircleDashed>
@@ -81,10 +79,26 @@ export default function Cart() {
 							<p className='text-2xl font-bold text-[--light_0]'>
 								{LANGUAGE.CART.SUMMARY[preferences.language]}
 							</p>
-							<p className='text-xl mb-2 flex justify-between text-[--light_200]'>
+							<p className='text-xl flex justify-between text-[--light_100]'>
 								{LANGUAGE.CART.PRODUCT[preferences.language]}{' '}
 								<span>{cart.length}</span>
 							</p>
+							<div className='pl-2 w-full'>
+								{cart.length > 0 ? (
+									cart.map(product => {
+										return (
+											<CartResumeItem
+												key={'cr-' + product.id + checkCId}
+												preferences={preferences}
+												product={product}
+												rate={rate}
+											></CartResumeItem>
+										);
+									})
+								) : (
+									<></>
+								)}
+							</div>
 							<p className='text-xl border-t border-[--light_400] py-2 flex justify-between items-end text-[--light_100]'>
 								{LANGUAGE.CART.TOTAL[preferences.language]}{' '}
 								<span className='font-bold'>
